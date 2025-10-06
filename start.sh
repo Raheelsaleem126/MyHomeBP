@@ -18,6 +18,10 @@ fi
 echo "🗄️ Running database migrations..."
 php artisan migrate --force
 
+# Check migration status
+echo "📊 Checking migration status..."
+php artisan migrate:status
+
 # Seed database if needed
 echo "🌱 Seeding database..."
 php artisan db:seed --force

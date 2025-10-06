@@ -75,3 +75,30 @@ Route::get('health', function () {
         'version' => '1.0.0'
     ]);
 });
+
+// Database test endpoint
+Route::get('db-test', function () {
+    try {
+        // Test database connection
+        DB::connection()->getPdo();
+        
+        // Check if tables exist
+        $tables = DB::select('SHOW TABLES');
+        $tableNames = array_map(function($table) {
+            return array_values((array)$table)[0];
+        }, $tables);
+        
+        return response()->json([
+            'status' => 'connected',
+            'database' => DB::connection()->getDatabaseName(),
+            'tables' => $tableNames,
+            'table_count' => count($tables)
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+            'database' => config('database.default')
+        ], 500);
+    }
+});
