@@ -66,8 +66,8 @@ return [
              */
             'middleware' => [
                 'api' => [],
-                'asset' => [],
-                'docs' => [],
+                'asset' => ['cors'],
+                'docs' => ['cors'],
                 'oauth2_callback' => [],
             ],
 
