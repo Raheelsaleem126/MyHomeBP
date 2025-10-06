@@ -1,0 +1,1533 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "MyHomeBP API",
+        "description": "Blood Pressure Management API for NHS and Private GP Surgery Use in the UK",
+        "contact": {
+            "name": "247 Meditech Support",
+            "email": "support@247meditech.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Local Development Server"
+        },
+        {
+            "url": "https://api.myhomebp.com/api",
+            "description": "Production Server"
+        }
+    ],
+    "paths": {
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register a new patient",
+                "operationId": "08136088c4862c313b35d6518bab8d3a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "first_name",
+                                    "surname",
+                                    "date_of_birth",
+                                    "address",
+                                    "mobile_phone",
+                                    "email",
+                                    "password",
+                                    "password_confirmation",
+                                    "clinic_id",
+                                    "terms_accepted",
+                                    "data_sharing_consent"
+                                ],
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Smith"
+                                    },
+                                    "date_of_birth": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1980-03-15"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 Main Street, London"
+                                    },
+                                    "mobile_phone": {
+                                        "type": "string",
+                                        "example": "07123456789"
+                                    },
+                                    "home_phone": {
+                                        "type": "string",
+                                        "example": "02012345678"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.smith@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "clinic_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "terms_accepted": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "data_sharing_consent": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "notifications_consent": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Patient registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Patient registered successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "patient": {
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|abc123..."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Login patient",
+                "operationId": "99d66635c4992aeaa6aa44ff653d0563",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.smith@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login successful"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "patient": {
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|abc123..."
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout patient",
+                "operationId": "6abf3b64a4bc7838d56346f05a5153af",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/auth/me": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get current patient profile",
+                "operationId": "7edae2cdbaafc10dff8c9c4198b320a2",
+                "responses": {
+                    "200": {
+                        "description": "Patient profile retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "patient": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/blood-pressure/record": {
+            "post": {
+                "tags": [
+                    "Blood Pressure"
+                ],
+                "summary": "Record blood pressure reading",
+                "operationId": "6eb0fca4b8482d36fd3be1148759b816",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "reading_date",
+                                    "session_type",
+                                    "reading_1_systolic",
+                                    "reading_1_diastolic",
+                                    "reading_1_pulse",
+                                    "reading_2_systolic",
+                                    "reading_2_diastolic",
+                                    "reading_2_pulse"
+                                ],
+                                "properties": {
+                                    "reading_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2024-01-15T09:30:00Z"
+                                    },
+                                    "session_type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "am",
+                                            "pm"
+                                        ],
+                                        "example": "am"
+                                    },
+                                    "reading_1_systolic": {
+                                        "type": "integer",
+                                        "example": 120
+                                    },
+                                    "reading_1_diastolic": {
+                                        "type": "integer",
+                                        "example": 80
+                                    },
+                                    "reading_1_pulse": {
+                                        "type": "integer",
+                                        "example": 72
+                                    },
+                                    "reading_2_systolic": {
+                                        "type": "integer",
+                                        "example": 118
+                                    },
+                                    "reading_2_diastolic": {
+                                        "type": "integer",
+                                        "example": 78
+                                    },
+                                    "reading_2_pulse": {
+                                        "type": "integer",
+                                        "example": 70
+                                    },
+                                    "reading_3_systolic": {
+                                        "type": "integer",
+                                        "example": 115
+                                    },
+                                    "reading_3_diastolic": {
+                                        "type": "integer",
+                                        "example": 75
+                                    },
+                                    "reading_3_pulse": {
+                                        "type": "integer",
+                                        "example": 68
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Blood pressure reading recorded successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Blood pressure reading recorded successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "reading": {
+                                                    "type": "object"
+                                                },
+                                                "system_response": {
+                                                    "type": "string",
+                                                    "example": "Thank you for submitting today's reading."
+                                                },
+                                                "requires_third_reading": {
+                                                    "type": "boolean",
+                                                    "example": false
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/blood-pressure/readings": {
+            "get": {
+                "tags": [
+                    "Blood Pressure"
+                ],
+                "summary": "Get blood pressure readings",
+                "operationId": "f54671d9a14c2476e529a5600b64ba33",
+                "parameters": [
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "description": "Number of days to retrieve readings for",
+                        "schema": {
+                            "type": "integer",
+                            "example": 7
+                        }
+                    },
+                    {
+                        "name": "session_type",
+                        "in": "query",
+                        "description": "Filter by session type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "am",
+                                "pm"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Blood pressure readings retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "readings": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "seven_day_average": {
+                                                    "type": "object"
+                                                },
+                                                "am_average": {
+                                                    "type": "object"
+                                                },
+                                                "pm_average": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/blood-pressure/averages": {
+            "get": {
+                "tags": [
+                    "Blood Pressure"
+                ],
+                "summary": "Get blood pressure averages and trends",
+                "operationId": "43a174b8eeb02a831538c8dc6f4fc69c",
+                "parameters": [
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "description": "Time period for averages",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "7",
+                                "30",
+                                "90"
+                            ],
+                            "example": "7"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Blood pressure averages retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "overall_average": {
+                                                    "type": "object"
+                                                },
+                                                "am_average": {
+                                                    "type": "object"
+                                                },
+                                                "pm_average": {
+                                                    "type": "object"
+                                                },
+                                                "trend_data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/clinics/search": {
+            "get": {
+                "tags": [
+                    "Clinic"
+                ],
+                "summary": "Search clinics",
+                "operationId": "52b6cd68cdd80957105d66629af3df08",
+                "parameters": [
+                    {
+                        "name": "postcode",
+                        "in": "query",
+                        "description": "Search by postcode",
+                        "schema": {
+                            "type": "string",
+                            "example": "SW1A 1AA"
+                        }
+                    },
+                    {
+                        "name": "name",
+                        "in": "query",
+                        "description": "Search by clinic name",
+                        "schema": {
+                            "type": "string",
+                            "example": "NHS Health Centre"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filter by clinic type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "NHS",
+                                "Private",
+                                "Mixed"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Clinics retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "clinics": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clinics/{id}": {
+            "get": {
+                "tags": [
+                    "Clinic"
+                ],
+                "summary": "Get clinic details",
+                "operationId": "06e7484f778aa172cb289b0566168fe1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Clinic ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Clinic details retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "clinic": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Clinic not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Clinic not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clinics/nearby": {
+            "get": {
+                "tags": [
+                    "Clinic"
+                ],
+                "summary": "Find nearby clinics",
+                "operationId": "b8883bfe4d20319e66d4e7e5a6b2c983",
+                "parameters": [
+                    {
+                        "name": "postcode",
+                        "in": "query",
+                        "description": "Postcode to search from",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "SW1A 1AA"
+                        }
+                    },
+                    {
+                        "name": "radius",
+                        "in": "query",
+                        "description": "Search radius in miles",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of results to return",
+                        "schema": {
+                            "type": "integer",
+                            "example": 5
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Nearby clinics retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "clinics": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clinics": {
+            "get": {
+                "tags": [
+                    "Clinic"
+                ],
+                "summary": "Get all clinics",
+                "operationId": "cfe19dc6921768e2b14ad884fe533638",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filter by clinic type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "NHS",
+                                "Private",
+                                "Mixed"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "schema": {
+                            "type": "integer",
+                            "example": 20
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Clinics retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "clinics": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/patient/profile": {
+            "get": {
+                "tags": [
+                    "Patient"
+                ],
+                "summary": "Get patient profile",
+                "operationId": "19c2e40942a53f910c74abe21fbe3404",
+                "responses": {
+                    "200": {
+                        "description": "Patient profile retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "patient": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Patient"
+                ],
+                "summary": "Update patient profile",
+                "operationId": "a365b3130806b8e8534fa5ec04141598",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "John"
+                                    },
+                                    "surname": {
+                                        "type": "string",
+                                        "example": "Smith"
+                                    },
+                                    "date_of_birth": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1980-03-15"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 Main Street, London"
+                                    },
+                                    "mobile_phone": {
+                                        "type": "string",
+                                        "example": "07123456789"
+                                    },
+                                    "home_phone": {
+                                        "type": "string",
+                                        "example": "02012345678"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john.smith@example.com"
+                                    },
+                                    "clinic_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "notifications_consent": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Profile updated successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "patient": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/patient/clinical-data": {
+            "get": {
+                "tags": [
+                    "Patient"
+                ],
+                "summary": "Get clinical data",
+                "operationId": "94c9b0de65313bcb13a725ecc0b1fe08",
+                "responses": {
+                    "200": {
+                        "description": "Clinical data retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "clinical_data": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Patient"
+                ],
+                "summary": "Save clinical data",
+                "operationId": "9b15dc23bd5de24198e644d92547f7fb",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "height_cm": {
+                                        "type": "integer",
+                                        "example": 175
+                                    },
+                                    "height_ft": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "height_inches": {
+                                        "type": "integer",
+                                        "example": 9
+                                    },
+                                    "weight_kg": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 75.5
+                                    },
+                                    "weight_stones": {
+                                        "type": "integer",
+                                        "example": 11
+                                    },
+                                    "weight_lbs": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 13.5
+                                    },
+                                    "ethnicity": {
+                                        "type": "string",
+                                        "example": "Asian"
+                                    },
+                                    "smoking_status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "never_smoked",
+                                            "current_smoker",
+                                            "ex_smoker",
+                                            "vaping",
+                                            "occasional_smoker"
+                                        ]
+                                    },
+                                    "hypertension_diagnosis": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "medications": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "comorbidities": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "last_blood_test": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-15"
+                                    },
+                                    "urine_protein_creatinine_ratio": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 0.5
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Clinical data saved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Clinical data saved successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "clinical_data": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/patient/dashboard": {
+            "get": {
+                "tags": [
+                    "Patient"
+                ],
+                "summary": "Get patient dashboard data",
+                "operationId": "056c87503572097399b114d33329451f",
+                "responses": {
+                    "200": {
+                        "description": "Dashboard data retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "patient": {
+                                                    "type": "object"
+                                                },
+                                                "last_reading": {
+                                                    "type": "object"
+                                                },
+                                                "recent_readings": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "seven_day_average": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/reports/generate": {
+            "post": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Generate blood pressure report",
+                "operationId": "58f9d9409f09dee37db75ec7cf92a751",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-01"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-07"
+                                    },
+                                    "include_clinical_data": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "email_to_clinic": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Report generated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Report generated successfully"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "report": {
+                                                    "type": "object"
+                                                },
+                                                "pdf_url": {
+                                                    "type": "string",
+                                                    "example": "/storage/reports/report_123.pdf"
+                                                },
+                                                "email_sent": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reports/summary": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Get report summary",
+                "operationId": "78ee8a760db0d01c12d2963e87361f7f",
+                "parameters": [
+                    {
+                        "name": "days",
+                        "in": "query",
+                        "description": "Number of days to include in summary",
+                        "schema": {
+                            "type": "integer",
+                            "example": 7
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Report summary retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "summary": {
+                                                    "type": "object"
+                                                },
+                                                "can_generate_report": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "readings_count": {
+                                                    "type": "integer",
+                                                    "example": 14
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reports/download/{filename}": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Download report PDF",
+                "operationId": "f62187b60732dc90d1656da2a46dbeaf",
+                "parameters": [
+                    {
+                        "name": "filename",
+                        "in": "path",
+                        "description": "Report filename",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "report_123.pdf"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Report downloaded successfully"
+                    },
+                    "404": {
+                        "description": "Report not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Report not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/reports/history": {
+            "get": {
+                "tags": [
+                    "Reports"
+                ],
+                "summary": "Get report history",
+                "operationId": "130dc212431d00a3a8fdda1ced6c7d41",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of results per page",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Report history retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "reports": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "pagination": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "description": "Enter the token with the `Bearer: ` prefix, e.g. `Bearer abc123`",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Patient authentication endpoints"
+        },
+        {
+            "name": "Blood Pressure",
+            "description": "Blood pressure recording and management"
+        },
+        {
+            "name": "Clinic",
+            "description": "Clinic search and management"
+        },
+        {
+            "name": "Patient",
+            "description": "Patient profile and clinical data management"
+        },
+        {
+            "name": "Reports",
+            "description": "Blood pressure report generation and management"
+        }
+    ]
+}
