@@ -127,19 +127,21 @@ class PatientController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             @OA\Property(property="height_cm", type="integer", example=175),
-     *             @OA\Property(property="height_ft", type="integer", example=5),
-     *             @OA\Property(property="height_inches", type="integer", example=9),
-     *             @OA\Property(property="weight_kg", type="number", format="float", example=75.5),
-     *             @OA\Property(property="weight_stones", type="integer", example=11),
-     *             @OA\Property(property="weight_lbs", type="number", format="float", example=13.5),
-     *             @OA\Property(property="ethnicity", type="string", example="Asian"),
-     *             @OA\Property(property="smoking_status", type="string", enum={"never_smoked","current_smoker","ex_smoker","vaping","occasional_smoker"}),
-     *             @OA\Property(property="hypertension_diagnosis", type="boolean", example=true),
-     *             @OA\Property(property="medications", type="array", @OA\Items(type="object")),
-     *             @OA\Property(property="comorbidities", type="array", @OA\Items(type="string")),
-     *             @OA\Property(property="last_blood_test", type="string", format="date", example="2024-01-15"),
-     *             @OA\Property(property="urine_protein_creatinine_ratio", type="number", format="float", example=0.5)
+     *             @OA\Property(property="height", type="number", format="float", example=175.0, description="Height in cm"),
+     *             @OA\Property(property="weight", type="number", format="float", example=70.0, description="Weight in kg"),
+     *             @OA\Property(property="ethnicity_code", type="string", example="A", description="UK ONS ethnicity code - Get available codes from /api/ethnicity-codes"),
+     *             @OA\Property(property="ethnicity_description", type="string", example="English, Welsh, Scottish, Northern Irish or British", description="Ethnicity description - Get from /api/ethnicity-codes"),
+     *             @OA\Property(property="smoking_status", type="string", enum={"never_smoked","current_smoker","ex_smoker","vaping","occasional_smoker"}, example="never_smoked", description="Smoking Status Options: never_smoked, current_smoker, ex_smoker, vaping, occasional_smoker"),
+     *             @OA\Property(property="last_blood_test_date", type="string", format="date", example="2024-01-15", description="Date of last blood test (YYYY-MM-DD format)"),
+     *             @OA\Property(property="urine_protein_creatinine_ratio", type="number", format="float", example=0.5, description="Urine Protein:Creatinine Ratio"),
+     *             @OA\Property(property="comorbidities", type="array", @OA\Items(type="string", enum={"stroke","diabetes_type_1","diabetes_type_2","atrial_fibrillation","transient_ischaemic_attack","chronic_kidney_disease","others"}), example={"diabetes_type_2"}, description="Comorbidity Options: stroke, diabetes_type_1, diabetes_type_2, atrial_fibrillation, transient_ischaemic_attack, chronic_kidney_disease, others"),
+     *             @OA\Property(property="others_comorbidities", type="string", example="Heart condition, Asthma", description="Other comorbidities if 'others' is selected in comorbidities array"),
+     *             @OA\Property(property="hypertension_diagnosis", type="string", enum={"yes","no","dont_know"}, example="yes", description="Hypertension Diagnosis Options: yes, no, dont_know"),
+     *             @OA\Property(property="medications", type="array", @OA\Items(
+     *                 @OA\Property(property="bnf_code", type="string", example="0205050A0AA", description="BNF medication code - Get available codes from /api/medications"),
+     *                 @OA\Property(property="dose", type="string", example="5mg", description="Medication dose (e.g., 5mg, 10mg, 2.5ml)"),
+     *                 @OA\Property(property="frequency", type="string", example="once_daily", description="Medication frequency - Get options from /api/medications/frequency-options")
+     *             ), example={{"bnf_code": "0205050A0AA", "dose": "5mg", "frequency": "once_daily"}}, description="Array of medication objects (only required if hypertension_diagnosis is 'yes')")
      *         )
      *     ),
      *     @OA\Response(
@@ -149,7 +151,28 @@ class PatientController extends Controller
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="message", type="string", example="Clinical data saved successfully"),
      *             @OA\Property(property="data", type="object",
-     *                 @OA\Property(property="clinical_data", type="object")
+     *                 @OA\Property(property="clinical_data", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="patient_id", type="integer", example=21),
+     *                     @OA\Property(property="height", type="number", format="float", example=175.0, description="Height in cm"),
+     *                     @OA\Property(property="weight", type="number", format="float", example=70.0, description="Weight in kg"),
+     *                     @OA\Property(property="bmi", type="number", format="float", example=22.9, description="Calculated BMI (automatically calculated from height and weight)"),
+     *                     @OA\Property(property="ethnicity_code", type="string", example="A", description="UK ONS ethnicity code"),
+     *                     @OA\Property(property="ethnicity_description", type="string", example="English, Welsh, Scottish, Northern Irish or British", description="Ethnicity description"),
+     *                     @OA\Property(property="smoking_status", type="string", example="never_smoked", description="Smoking Status: never_smoked, current_smoker, ex_smoker, vaping, occasional_smoker"),
+     *                     @OA\Property(property="last_blood_test_date", type="string", format="date", example="2024-01-15", description="Date of last blood test"),
+     *                     @OA\Property(property="urine_protein_creatinine_ratio", type="number", format="float", example=0.5, description="Urine Protein:Creatinine Ratio"),
+     *                     @OA\Property(property="comorbidities", type="array", @OA\Items(type="string"), example={"diabetes_type_2"}, description="Comorbidities: stroke, diabetes_type_1, diabetes_type_2, atrial_fibrillation, transient_ischaemic_attack, chronic_kidney_disease, others"),
+     *                     @OA\Property(property="others_comorbidities", type="string", example="Heart condition, Asthma", description="Other comorbidities if 'others' is selected"),
+     *                     @OA\Property(property="hypertension_diagnosis", type="string", example="yes", description="Hypertension diagnosis: yes, no, dont_know"),
+     *                     @OA\Property(property="medications", type="array", @OA\Items(
+     *                         @OA\Property(property="bnf_code", type="string", example="0205050A0AA", description="BNF medication code"),
+     *                         @OA\Property(property="dose", type="string", example="5mg", description="Medication dose"),
+     *                         @OA\Property(property="frequency", type="string", example="once_daily", description="Medication frequency")
+     *                     ), example={{"bnf_code": "0205050A0AA", "dose": "5mg", "frequency": "once_daily"}}, description="Array of medication objects"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time"),
+     *                     @OA\Property(property="updated_at", type="string", format="date-time")
+     *                 )
      *             )
      *         )
      *     )
@@ -160,19 +183,21 @@ class PatientController extends Controller
         $patient = $request->user();
 
         $validator = Validator::make($request->all(), [
-            'height_cm' => 'nullable|integer|min:50|max:300',
-            'height_ft' => 'nullable|integer|min:1|max:10',
-            'height_inches' => 'nullable|integer|min:0|max:11',
-            'weight_kg' => 'nullable|numeric|min:10|max:500',
-            'weight_stones' => 'nullable|integer|min:1|max:50',
-            'weight_lbs' => 'nullable|numeric|min:0|max:13.9',
-            'ethnicity' => 'nullable|string|max:255',
+            'height' => 'nullable|numeric|min:50|max:300',
+            'weight' => 'nullable|numeric|min:10|max:500',
+            'ethnicity_code' => 'nullable|string|max:10|exists:ethnicity_codes,code',
+            'ethnicity_description' => 'nullable|string|max:255',
             'smoking_status' => 'nullable|in:never_smoked,current_smoker,ex_smoker,vaping,occasional_smoker',
-            'hypertension_diagnosis' => 'nullable|boolean',
-            'medications' => 'nullable|array',
-            'comorbidities' => 'nullable|array',
-            'last_blood_test' => 'nullable|date|before:today',
+            'last_blood_test_date' => 'nullable|date|before:today',
             'urine_protein_creatinine_ratio' => 'nullable|numeric|min:0|max:1000',
+            'comorbidities' => 'nullable|array',
+            'comorbidities.*' => 'in:stroke,diabetes_type_1,diabetes_type_2,atrial_fibrillation,transient_ischaemic_attack,chronic_kidney_disease,others',
+            'others_comorbidities' => 'nullable|string|max:1000',
+            'hypertension_diagnosis' => 'nullable|in:yes,no,dont_know',
+            'medications' => 'nullable|array',
+            'medications.*.bnf_code' => 'required_with:medications|string|exists:medications,bnf_code',
+            'medications.*.dose' => 'required_with:medications|string|max:50',
+            'medications.*.frequency' => 'required_with:medications|string|max:50',
         ]);
 
         if ($validator->fails()) {
@@ -183,16 +208,27 @@ class PatientController extends Controller
             ], 422);
         }
 
+        // Prepare data for clinical data creation
+        $clinicalDataInput = $request->only([
+            'height',
+            'weight',
+            'ethnicity_code',
+            'ethnicity_description',
+            'smoking_status',
+            'last_blood_test_date',
+            'urine_protein_creatinine_ratio',
+            'comorbidities',
+            'others_comorbidities',
+            'hypertension_diagnosis',
+            'medications'
+        ]);
+
         $clinicalData = $patient->clinicalData()->updateOrCreate(
             ['patient_id' => $patient->id],
-            $request->all()
+            $clinicalDataInput
         );
 
-        // Calculate BMI if height and weight are provided
-        if ($request->height_cm && $request->weight_kg) {
-            $bmi = $clinicalData->calculateBmi();
-            $clinicalData->update(['bmi' => $bmi]);
-        }
+        // BMI will be automatically calculated by the model's boot method
 
         return response()->json([
             'status' => 'success',
@@ -215,7 +251,28 @@ class PatientController extends Controller
      *         @OA\JsonContent(
      *             @OA\Property(property="status", type="string", example="success"),
      *             @OA\Property(property="data", type="object",
-     *                 @OA\Property(property="clinical_data", type="object")
+     *                 @OA\Property(property="clinical_data", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="patient_id", type="integer", example=21),
+     *                     @OA\Property(property="height", type="number", format="float", example=175.0, description="Height in cm"),
+     *                     @OA\Property(property="weight", type="number", format="float", example=70.0, description="Weight in kg"),
+     *                     @OA\Property(property="bmi", type="number", format="float", example=22.9, description="Calculated BMI (automatically calculated from height and weight)"),
+     *                     @OA\Property(property="ethnicity_code", type="string", example="A", description="UK ONS ethnicity code"),
+     *                     @OA\Property(property="ethnicity_description", type="string", example="English, Welsh, Scottish, Northern Irish or British", description="Ethnicity description"),
+     *                     @OA\Property(property="smoking_status", type="string", example="never_smoked", description="Smoking Status: never_smoked, current_smoker, ex_smoker, vaping, occasional_smoker"),
+     *                     @OA\Property(property="last_blood_test_date", type="string", format="date", example="2024-01-15", description="Date of last blood test"),
+     *                     @OA\Property(property="urine_protein_creatinine_ratio", type="number", format="float", example=0.5, description="Urine Protein:Creatinine Ratio"),
+     *                     @OA\Property(property="comorbidities", type="array", @OA\Items(type="string"), example={"diabetes_type_2"}, description="Comorbidities: stroke, diabetes_type_1, diabetes_type_2, atrial_fibrillation, transient_ischaemic_attack, chronic_kidney_disease, others"),
+     *                     @OA\Property(property="others_comorbidities", type="string", example="Heart condition, Asthma", description="Other comorbidities if 'others' is selected"),
+     *                     @OA\Property(property="hypertension_diagnosis", type="string", example="yes", description="Hypertension diagnosis: yes, no, dont_know"),
+     *                     @OA\Property(property="medications", type="array", @OA\Items(
+     *                         @OA\Property(property="bnf_code", type="string", example="0205050A0AA", description="BNF medication code"),
+     *                         @OA\Property(property="dose", type="string", example="5mg", description="Medication dose"),
+     *                         @OA\Property(property="frequency", type="string", example="once_daily", description="Medication frequency")
+     *                     ), example={{"bnf_code": "0205050A0AA", "dose": "5mg", "frequency": "once_daily"}}, description="Array of medication objects"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time"),
+     *                     @OA\Property(property="updated_at", type="string", format="date-time")
+     *                 )
      *             )
      *         )
      *     )

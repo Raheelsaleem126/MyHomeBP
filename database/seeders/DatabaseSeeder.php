@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             ClinicSeeder::class,
             SpecialitySeeder::class,
             DoctorSeeder::class,
+            EthnicityCodeSeeder::class,
+            MedicationSeeder::class,
             PatientSeeder::class,
             BloodPressureReadingSeeder::class,
         ]);
