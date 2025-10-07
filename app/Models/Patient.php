@@ -27,7 +27,7 @@ class Patient extends Authenticatable
         'mobile_phone',
         'home_phone',
         'email',
-        'password',
+        'pin',
         'clinic_id',
         'doctor_id',
         'terms_accepted',
@@ -42,7 +42,7 @@ class Patient extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        'pin',
         'remember_token',
     ];
 
@@ -54,8 +54,7 @@ class Patient extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'pin' => 'hashed',
             'date_of_birth' => 'date',
             'last_login_at' => 'datetime',
             'terms_accepted' => 'boolean',

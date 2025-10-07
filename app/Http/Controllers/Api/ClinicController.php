@@ -326,4 +326,84 @@ class ClinicController extends Controller
             ]
         ]);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/clinics/{id}/doctors",
+     *     summary="Get doctors by clinic",
+     *     tags={"Clinic"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Clinic ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Doctors retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="doctors", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="total", type="integer", example=5)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Clinic not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Clinic not found")
+     *         )
+     *     )
+     * )
+     */
+    public function doctors($id): JsonResponse
+    {
+        $clinic = Clinic::find($id);
+
+        if (!$clinic) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Clinic not found'
+            ], 404);
+        }
+
+        $doctors = $clinic->doctors()
+            ->wherePivot('status', 'active')
+            ->active()
+            ->available()
+            ->with('specialities')
+            ->get()
+            ->map(function ($doctor) {
+                return [
+                    'id' => $doctor->id,
+                    'first_name' => $doctor->first_name,
+                    'last_name' => $doctor->last_name,
+                    'full_name' => $doctor->full_name,
+                    'email' => $doctor->email,
+                    'phone' => $doctor->phone,
+                    'gmc_number' => $doctor->gmc_number,
+                    'specialities' => $doctor->specialities->map(function ($speciality) {
+                        return [
+                            'id' => $speciality->id,
+                            'name' => $speciality->name,
+                            'description' => $speciality->description,
+                        ];
+                    }),
+                    'years_of_experience' => $doctor->years_of_experience,
+                    'bio' => $doctor->bio,
+                ];
+            });
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'doctors' => $doctors,
+                'total' => $doctors->count()
+            ]
+        ]);
+    }
 }

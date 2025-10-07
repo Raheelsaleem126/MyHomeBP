@@ -39,6 +39,7 @@ Route::prefix('clinics')->group(function () {
     Route::get('nearby', [ClinicController::class, 'nearby']);
     Route::get('/', [ClinicController::class, 'index']);
     Route::get('{id}', [ClinicController::class, 'show']);
+    Route::get('{id}/doctors', [ClinicController::class, 'doctors']);
 });
 
 // Specialities (public)
