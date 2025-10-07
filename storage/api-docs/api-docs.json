@@ -23,6 +23,206 @@
         }
     ],
     "paths": {
+        "/admin/login": {
+            "post": {
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Admin login",
+                "description": "Authenticate admin user and return access token",
+                "operationId": "ca85837b6fc19d94a39a445d949d4ec9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AdminLoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AdminLoginResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid credentials"
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Access denied - Admin role required",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Access denied. Admin role required."
+                                        },
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Forbidden"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/logout": {
+            "post": {
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Admin logout",
+                "description": "Logout admin user and revoke current token",
+                "operationId": "ca3cbc352eab76d0459b48f3778c6b28",
+                "responses": {
+                    "200": {
+                        "description": "Logout successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout successful"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/admin/me": {
+            "get": {
+                "tags": [
+                    "Admin Authentication"
+                ],
+                "summary": "Get admin profile",
+                "description": "Get current authenticated admin user profile",
+                "operationId": "ed31d9a17d5a23605a8a497194e4db95",
+                "responses": {
+                    "200": {
+                        "description": "Admin profile retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Admin User"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "admin@example.com"
+                                                },
+                                                "role": {
+                                                    "type": "string",
+                                                    "example": "admin"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/auth/register": {
             "post": {
                 "tags": [
@@ -894,6 +1094,626 @@
                 }
             }
         },
+        "/doctors": {
+            "get": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "Get all doctors",
+                "description": "Retrieve a paginated list of all doctors with optional filtering",
+                "operationId": "947a21b8ae7d72b24b902600c8e443c9",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by doctor name",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Dr. Sarah"
+                        }
+                    },
+                    {
+                        "name": "speciality_id",
+                        "in": "query",
+                        "description": "Filter by speciality ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "clinic_id",
+                        "in": "query",
+                        "description": "Filter by clinic ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "Filter by active status",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "example": true
+                        }
+                    },
+                    {
+                        "name": "is_available",
+                        "in": "query",
+                        "description": "Filter by availability",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "example": true
+                        }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "Include relationships (specialities,clinics,primarySpeciality)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "specialities,clinics"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Doctor"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/doctors": {
+            "post": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "Create a new doctor",
+                "description": "Create a new doctor with specialities and clinic assignments",
+                "operationId": "8bad11c94d4596430298a58a30a0025b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "first_name",
+                                    "last_name",
+                                    "email",
+                                    "gmc_number"
+                                ],
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Dr. Sarah"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Johnson"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "sarah.johnson@example.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+44 20 7123 4567"
+                                    },
+                                    "gmc_number": {
+                                        "type": "string",
+                                        "example": "GMC123456"
+                                    },
+                                    "date_of_birth": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1980-05-15"
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "enum": [
+                                            "male",
+                                            "female",
+                                            "other"
+                                        ],
+                                        "example": "female"
+                                    },
+                                    "qualifications": {
+                                        "type": "string",
+                                        "example": "MBBS, MRCP, PhD in Cardiology"
+                                    },
+                                    "years_of_experience": {
+                                        "type": "integer",
+                                        "example": 15
+                                    },
+                                    "bio": {
+                                        "type": "string",
+                                        "example": "Experienced cardiologist..."
+                                    },
+                                    "profile_image": {
+                                        "type": "string",
+                                        "example": "path/to/image.jpg"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "is_available": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "speciality_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "clinic_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Doctor created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Doctor"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/doctors/{id}": {
+            "get": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "Get doctor by ID",
+                "description": "Retrieve a specific doctor by ID with optional relationships",
+                "operationId": "dd020a547256bc4a1307488115755404",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Doctor ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "Include relationships (specialities,clinics,primarySpeciality)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "specialities,clinics"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Doctor"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Doctor not found"
+                    }
+                }
+            }
+        },
+        "/admin/doctors/{id}": {
+            "put": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "Update doctor",
+                "description": "Update an existing doctor's information",
+                "operationId": "b529039117132f29a5abc4e4e1baf8ea",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Doctor ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "Dr. Sarah"
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Johnson"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "sarah.johnson@example.com"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+44 20 7123 4567"
+                                    },
+                                    "gmc_number": {
+                                        "type": "string",
+                                        "example": "GMC123456"
+                                    },
+                                    "date_of_birth": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "1980-05-15"
+                                    },
+                                    "gender": {
+                                        "type": "string",
+                                        "enum": [
+                                            "male",
+                                            "female",
+                                            "other"
+                                        ],
+                                        "example": "female"
+                                    },
+                                    "qualifications": {
+                                        "type": "string",
+                                        "example": "MBBS, MRCP, PhD in Cardiology"
+                                    },
+                                    "years_of_experience": {
+                                        "type": "integer",
+                                        "example": 15
+                                    },
+                                    "bio": {
+                                        "type": "string",
+                                        "example": "Experienced cardiologist..."
+                                    },
+                                    "profile_image": {
+                                        "type": "string",
+                                        "example": "path/to/image.jpg"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    "is_available": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Doctor updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Doctor"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Doctor not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "Delete doctor",
+                "description": "Delete a doctor (soft delete by setting is_active to false)",
+                "operationId": "94793a92cd457a97cf6b31cd4027bff8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Doctor ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Doctor deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Doctor deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Doctor not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/admin/doctors/{id}/specialities": {
+            "post": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "Attach specialities to doctor",
+                "description": "Attach one or more specialities to a doctor",
+                "operationId": "ae12b77dc58a9ac51bae5597d75ad7d8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Doctor ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "speciality_ids"
+                                ],
+                                "properties": {
+                                    "speciality_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "certification_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2020-01-15"
+                                    },
+                                    "certification_body": {
+                                        "type": "string",
+                                        "example": "GMC"
+                                    },
+                                    "is_primary": {
+                                        "description": "Speciality ID that should be primary",
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Specialities attached successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Doctor"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/doctors/{id}/clinics": {
+            "post": {
+                "tags": [
+                    "Doctors"
+                ],
+                "summary": "Attach clinics to doctor",
+                "description": "Attach one or more clinics to a doctor",
+                "operationId": "6693b45c1e71b786c721ee139d6b7d84",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Doctor ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "clinic_ids"
+                                ],
+                                "properties": {
+                                    "clinic_ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2024-01-01"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "active",
+                                            "inactive",
+                                            "suspended"
+                                        ],
+                                        "example": "active"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Clinics attached successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Doctor"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/patient/profile": {
             "get": {
                 "tags": [
@@ -1495,16 +2315,650 @@
                     }
                 ]
             }
+        },
+        "/specialities": {
+            "get": {
+                "tags": [
+                    "Specialities"
+                ],
+                "summary": "Get all specialities",
+                "description": "Retrieve a paginated list of all medical specialities with optional filtering",
+                "operationId": "b0fb95e02399528fd11a83e512233061",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search by speciality name",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "Cardiology"
+                        }
+                    },
+                    {
+                        "name": "is_active",
+                        "in": "query",
+                        "description": "Filter by active status",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "example": true
+                        }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "Include relationships (doctors)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "doctors"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Speciality"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/admin/specialities": {
+            "post": {
+                "tags": [
+                    "Specialities"
+                ],
+                "summary": "Create a new speciality",
+                "description": "Create a new medical speciality",
+                "operationId": "9310251604025b8497fec14ec3cc7d30",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Cardiology"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Heart and cardiovascular system specialist"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "CARD"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Speciality created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Speciality"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/specialities/{id}": {
+            "get": {
+                "tags": [
+                    "Specialities"
+                ],
+                "summary": "Get speciality by ID",
+                "description": "Retrieve a specific speciality by ID with optional relationships",
+                "operationId": "53031693150def4f76b87cf6dbe67714",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Speciality ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "include",
+                        "in": "query",
+                        "description": "Include relationships (doctors)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "doctors"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Speciality"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Speciality not found"
+                    }
+                }
+            }
+        },
+        "/admin/specialities/{id}": {
+            "put": {
+                "tags": [
+                    "Specialities"
+                ],
+                "summary": "Update speciality",
+                "description": "Update an existing speciality's information",
+                "operationId": "22f4cf9ba99a812afc69278d1a260196",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Speciality ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Cardiology"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Heart and cardiovascular system specialist"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "CARD"
+                                    },
+                                    "is_active": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Speciality updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Speciality"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Speciality not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Specialities"
+                ],
+                "summary": "Delete speciality",
+                "description": "Delete a speciality (soft delete by setting is_active to false)",
+                "operationId": "a8e4550cf72b0f5293d1f9c18d3d52eb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Speciality ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Speciality deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Speciality deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Speciality not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/specialities/{id}/doctors": {
+            "get": {
+                "tags": [
+                    "Specialities"
+                ],
+                "summary": "Get doctors by speciality",
+                "description": "Retrieve all doctors who have a specific speciality",
+                "operationId": "5b3e35c29f8fd09d9072682e9b33e465",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Speciality ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "description": "Page number for pagination",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "description": "Number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    },
+                    {
+                        "name": "is_primary",
+                        "in": "query",
+                        "description": "Filter by primary speciality",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean",
+                            "example": true
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Doctor"
+                                            }
+                                        },
+                                        "links": {
+                                            "type": "object"
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
+        "schemas": {
+            "AdminLoginRequest": {
+                "title": "Admin Login Request",
+                "description": "Admin login credentials",
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "admin@myhomebp.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "admin123"
+                    }
+                },
+                "type": "object"
+            },
+            "AdminLoginResponse": {
+                "title": "Admin Login Response",
+                "description": "Successful admin login response",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Login successful"
+                    },
+                    "user": {
+                        "properties": {
+                            "id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "name": {
+                                "type": "string",
+                                "example": "Admin User"
+                            },
+                            "email": {
+                                "type": "string",
+                                "example": "admin@example.com"
+                            },
+                            "role": {
+                                "type": "string",
+                                "example": "admin"
+                            },
+                            "created_at": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "updated_at": {
+                                "type": "string",
+                                "format": "date-time"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "token": {
+                        "type": "string",
+                        "example": "1|abc123def456..."
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "Bearer"
+                    }
+                },
+                "type": "object"
+            },
+            "Doctor": {
+                "title": "Doctor",
+                "description": "Doctor model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "example": "Dr. Sarah"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Johnson"
+                    },
+                    "full_name": {
+                        "type": "string",
+                        "example": "Dr. Sarah Johnson"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "sarah.johnson@example.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "+44 20 7123 4567"
+                    },
+                    "gmc_number": {
+                        "type": "string",
+                        "example": "GMC123456"
+                    },
+                    "date_of_birth": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "1980-05-15"
+                    },
+                    "gender": {
+                        "type": "string",
+                        "enum": [
+                            "male",
+                            "female",
+                            "other"
+                        ],
+                        "example": "female"
+                    },
+                    "qualifications": {
+                        "type": "string",
+                        "example": "MBBS, MRCP, PhD in Cardiology"
+                    },
+                    "years_of_experience": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "bio": {
+                        "type": "string",
+                        "example": "Experienced cardiologist..."
+                    },
+                    "profile_image": {
+                        "type": "string",
+                        "example": "path/to/image.jpg"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_available": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01 12:00:00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01 12:00:00"
+                    },
+                    "specialities": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "primary_speciality": {
+                        "type": "object"
+                    },
+                    "clinics": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "patients_count": {
+                        "type": "integer",
+                        "example": 25
+                    }
+                },
+                "type": "object"
+            },
+            "Speciality": {
+                "title": "Speciality",
+                "description": "Medical speciality model",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Cardiology"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Heart and cardiovascular system specialist"
+                    },
+                    "code": {
+                        "type": "string",
+                        "example": "CARD"
+                    },
+                    "full_name": {
+                        "type": "string",
+                        "example": "Cardiology (CARD)"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01 12:00:00"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01 12:00:00"
+                    },
+                    "doctors_count": {
+                        "type": "integer",
+                        "example": 5
+                    },
+                    "doctors": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            }
+        },
         "securitySchemes": {
             "sanctum": {
                 "type": "http",
                 "description": "Enter the token with the `Bearer: ` prefix, e.g. `Bearer abc123`",
                 "bearerFormat": "JWT",
                 "scheme": "bearer"
-            }
+            },
+            "0": []
         }
     },
     "tags": [
@@ -1527,6 +2981,18 @@
         {
             "name": "Reports",
             "description": "Blood pressure report generation and management"
+        },
+        {
+            "name": "Admin Authentication",
+            "description": "Admin Authentication"
+        },
+        {
+            "name": "Doctors",
+            "description": "Doctors"
+        },
+        {
+            "name": "Specialities",
+            "description": "Specialities"
         }
     ]
 }

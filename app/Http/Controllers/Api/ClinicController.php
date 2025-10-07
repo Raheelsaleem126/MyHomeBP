@@ -7,6 +7,32 @@ use App\Models\Clinic;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use OpenApi\Annotations as OA;
+
+/**
+ * @OA\Schema(
+ *     schema="Clinic",
+ *     type="object",
+ *     title="Clinic",
+ *     description="Clinic model",
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="NHS Health Centre"),
+ *     @OA\Property(property="address", type="string", example="123 Main Street, London"),
+ *     @OA\Property(property="postcode", type="string", example="SW1A 1AA"),
+ *     @OA\Property(property="phone", type="string", example="+44 20 7123 4567"),
+ *     @OA\Property(property="email", type="string", format="email", example="info@clinic.com"),
+ *     @OA\Property(property="type", type="string", example="NHS"),
+ *     @OA\Property(property="latitude", type="number", format="float", example=51.5074),
+ *     @OA\Property(property="longitude", type="number", format="float", example=-0.1278),
+ *     @OA\Property(property="is_active", type="boolean", example=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01 12:00:00"),
+ *     @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-01 12:00:00"),
+ *     @OA\Property(property="doctors_count", type="integer", example=10),
+ *     @OA\Property(property="patients_count", type="integer", example=500),
+ *     @OA\Property(property="doctors", type="array", @OA\Items(type="object")),
+ *     @OA\Property(property="patients", type="array", @OA\Items(type="object"))
+ * )
+ */
 
 /**
  * @OA\Tag(

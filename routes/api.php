@@ -3,9 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\AdminAuthController;
 use App\Http\Controllers\Api\PatientController;
 use App\Http\Controllers\Api\BloodPressureController;
 use App\Http\Controllers\Api\ClinicController;
+use App\Http\Controllers\Api\DoctorController;
+use App\Http\Controllers\Api\SpecialityController;
 use App\Http\Controllers\Api\ReportController;
 
 /*
@@ -25,12 +28,30 @@ Route::prefix('auth')->group(function () {
     Route::post('login', [AuthController::class, 'login']);
 });
 
+// Admin authentication routes (public)
+Route::prefix('admin')->group(function () {
+    Route::post('login', [AdminAuthController::class, 'login']);
+});
+
 // Clinic search (public)
 Route::prefix('clinics')->group(function () {
     Route::get('search', [ClinicController::class, 'search']);
     Route::get('nearby', [ClinicController::class, 'nearby']);
     Route::get('/', [ClinicController::class, 'index']);
     Route::get('{id}', [ClinicController::class, 'show']);
+});
+
+// Specialities (public)
+Route::prefix('specialities')->group(function () {
+    Route::get('/', [SpecialityController::class, 'index']);
+    Route::get('{id}', [SpecialityController::class, 'show']);
+    Route::get('{id}/doctors', [SpecialityController::class, 'doctors']);
+});
+
+// Doctors (public)
+Route::prefix('doctors')->group(function () {
+    Route::get('/', [DoctorController::class, 'index']);
+    Route::get('{id}', [DoctorController::class, 'show']);
 });
 
 // Protected routes (require authentication)
@@ -64,6 +85,31 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('history', [ReportController::class, 'getReportHistory']);
         Route::get('download/{filename}', [ReportController::class, 'downloadReport']);
     });
+
+    // Admin authentication routes (protected)
+    Route::prefix('admin')->group(function () {
+        Route::post('logout', [AdminAuthController::class, 'logout']);
+        Route::get('me', [AdminAuthController::class, 'me']);
+    });
+
+    // Admin routes (protected by admin middleware)
+    Route::prefix('admin')->middleware('admin')->group(function () {
+        // Speciality management
+        Route::prefix('specialities')->group(function () {
+            Route::post('/', [SpecialityController::class, 'store']);
+            Route::put('{id}', [SpecialityController::class, 'update']);
+            Route::delete('{id}', [SpecialityController::class, 'destroy']);
+        });
+
+        // Doctor management
+        Route::prefix('doctors')->group(function () {
+            Route::post('/', [DoctorController::class, 'store']);
+            Route::put('{id}', [DoctorController::class, 'update']);
+            Route::delete('{id}', [DoctorController::class, 'destroy']);
+            Route::post('{id}/specialities', [DoctorController::class, 'attachSpecialities']);
+            Route::post('{id}/clinics', [DoctorController::class, 'attachClinics']);
+        });
+    });
 });
 
 // Health check endpoint
@@ -75,6 +121,7 @@ Route::get('health', function () {
         'version' => '1.0.0'
     ]);
 });
+
 
 // Database test endpoint
 Route::get('db-test', function () {

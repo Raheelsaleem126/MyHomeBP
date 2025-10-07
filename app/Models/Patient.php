@@ -29,6 +29,7 @@ class Patient extends Authenticatable
         'email',
         'password',
         'clinic_id',
+        'doctor_id',
         'terms_accepted',
         'data_sharing_consent',
         'notifications_consent',
@@ -69,6 +70,14 @@ class Patient extends Authenticatable
     public function clinic(): BelongsTo
     {
         return $this->belongsTo(Clinic::class);
+    }
+
+    /**
+     * Get the doctor that the patient is assigned to.
+     */
+    public function doctor(): BelongsTo
+    {
+        return $this->belongsTo(Doctor::class);
     }
 
     /**
