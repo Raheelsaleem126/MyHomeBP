@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Clinic extends Model
@@ -47,6 +48,16 @@ class Clinic extends Model
     public function patients(): HasMany
     {
         return $this->hasMany(Patient::class);
+    }
+
+    /**
+     * Get the doctors that belong to this clinic.
+     */
+    public function doctors(): BelongsToMany
+    {
+        return $this->belongsToMany(Doctor::class, 'clinic_doctor')
+                    ->withPivot(['start_date', 'end_date', 'status', 'notes'])
+                    ->withTimestamps();
     }
 
     /**
