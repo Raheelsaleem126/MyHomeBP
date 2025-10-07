@@ -15,12 +15,11 @@
     },
     "servers": [
         {
-            "url": "http://localhost:8000/api",
-            "description": "Local Development Server"
+            "url": "http://localhost/api",
+            "description": "API Server"
         },
         {
-            "url": "https://api.myhomebp.com/api",
-            "description": "Production Server"
+            "url": "http://localhost/api"
         }
     ],
     "paths": {

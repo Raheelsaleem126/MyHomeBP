@@ -21,6 +21,20 @@ if [ -z "$(grep APP_KEY .env)" ] || [ "$(grep APP_KEY .env | cut -d '=' -f2)" = 
     php artisan key:generate --no-interaction
 fi
 
+# Set production APP_URL if not already set
+echo "🌐 Setting production APP_URL..."
+if ! grep -q "APP_URL=http://3.250.60.71" .env; then
+    sed -i 's|APP_URL=.*|APP_URL=http://3.250.60.71|' .env
+fi
+
+# Set L5_SWAGGER_CONST_HOST for production Swagger docs
+echo "📚 Setting Swagger host URL..."
+if ! grep -q "L5_SWAGGER_CONST_HOST=" .env; then
+    echo "L5_SWAGGER_CONST_HOST=http://3.250.60.71/api" >> .env
+else
+    sed -i 's|L5_SWAGGER_CONST_HOST=.*|L5_SWAGGER_CONST_HOST=http://3.250.60.71/api|' .env
+fi
+
 # Run database migrations
 echo "🗄️ Running database migrations..."
 php artisan migrate --force
