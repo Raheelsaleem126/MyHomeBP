@@ -26,6 +26,10 @@ php artisan cache:clear
 php artisan route:clear
 php artisan view:clear
 
+# Publish Swagger assets
+echo "📦 Publishing Swagger UI assets..."
+php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider" --tag=assets --force
+
 # Generate Swagger documentation
 echo "📚 Generating API documentation..."
 php artisan l5-swagger:generate
