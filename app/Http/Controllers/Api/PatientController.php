@@ -60,7 +60,7 @@ class PatientController extends Controller
      *             @OA\Property(property="surname", type="string", example="Smith"),
      *             @OA\Property(property="date_of_birth", type="string", format="date", example="1980-03-15"),
      *             @OA\Property(property="address", type="string", example="123 Main Street, London"),
-     *             @OA\Property(property="mobile_phone", type="string", example="07123456789"),
+     *             @OA\Property(property="mobile_phone", type="string", example="03172650575"),
      *             @OA\Property(property="home_phone", type="string", example="02012345678"),
      *             @OA\Property(property="email", type="string", format="email", example="john.smith@example.com"),
      *             @OA\Property(property="clinic_id", type="integer", example=1),

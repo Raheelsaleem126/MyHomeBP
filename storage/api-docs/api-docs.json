@@ -242,9 +242,9 @@
                                     "address",
                                     "mobile_phone",
                                     "email",
-                                    "password",
-                                    "password_confirmation",
+                                    "pin",
                                     "clinic_id",
+                                    "doctor_id",
                                     "terms_accepted",
                                     "data_sharing_consent"
                                 ],
@@ -268,7 +268,7 @@
                                     },
                                     "mobile_phone": {
                                         "type": "string",
-                                        "example": "07123456789"
+                                        "example": "03172650575"
                                     },
                                     "home_phone": {
                                         "type": "string",
@@ -279,17 +279,15 @@
                                         "format": "email",
                                         "example": "john.smith@example.com"
                                     },
-                                    "password": {
+                                    "pin": {
                                         "type": "string",
-                                        "format": "password",
-                                        "example": "password123"
-                                    },
-                                    "password_confirmation": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "password123"
+                                        "example": "1234"
                                     },
                                     "clinic_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "doctor_id": {
                                         "type": "integer",
                                         "example": 1
                                     },
@@ -379,19 +377,17 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "email",
-                                    "password"
+                                    "mobile_phone",
+                                    "pin"
                                 ],
                                 "properties": {
-                                    "email": {
+                                    "mobile_phone": {
                                         "type": "string",
-                                        "format": "email",
-                                        "example": "john.smith@example.com"
+                                        "example": "03172650575"
                                     },
-                                    "password": {
+                                    "pin": {
                                         "type": "string",
-                                        "format": "password",
-                                        "example": "password123"
+                                        "example": "1234"
                                     }
                                 },
                                 "type": "object"
@@ -1094,6 +1090,80 @@
                 }
             }
         },
+        "/clinics/{id}/doctors": {
+            "get": {
+                "tags": [
+                    "Clinic"
+                ],
+                "summary": "Get doctors by clinic",
+                "operationId": "54600b00bf955bb7343e3fe2024b1505",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Clinic ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Doctors retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "doctors": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Clinic not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Clinic not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/doctors": {
             "get": {
                 "tags": [
@@ -1784,7 +1854,7 @@
                                     },
                                     "mobile_phone": {
                                         "type": "string",
-                                        "example": "07123456789"
+                                        "example": "03172650575"
                                     },
                                     "home_phone": {
                                         "type": "string",
