@@ -27,17 +27,17 @@ class AuthController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"first_name","surname","date_of_birth","address","mobile_phone","email","password","password_confirmation","clinic_id","terms_accepted","data_sharing_consent"},
+     *             required={"first_name","surname","date_of_birth","address","mobile_phone","email","pin","clinic_id","doctor_id","terms_accepted","data_sharing_consent"},
      *             @OA\Property(property="first_name", type="string", example="John"),
      *             @OA\Property(property="surname", type="string", example="Smith"),
      *             @OA\Property(property="date_of_birth", type="string", format="date", example="1980-03-15"),
      *             @OA\Property(property="address", type="string", example="123 Main Street, London"),
-     *             @OA\Property(property="mobile_phone", type="string", example="07123456789"),
+     *             @OA\Property(property="mobile_phone", type="string", example="03172650575"),
      *             @OA\Property(property="home_phone", type="string", example="02012345678"),
      *             @OA\Property(property="email", type="string", format="email", example="john.smith@example.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="password123"),
-     *             @OA\Property(property="password_confirmation", type="string", format="password", example="password123"),
+     *             @OA\Property(property="pin", type="string", example="1234"),
      *             @OA\Property(property="clinic_id", type="integer", example=1),
+     *             @OA\Property(property="doctor_id", type="integer", example=1),
      *             @OA\Property(property="terms_accepted", type="boolean", example=true),
      *             @OA\Property(property="data_sharing_consent", type="boolean", example=true),
      *             @OA\Property(property="notifications_consent", type="boolean", example=true)
@@ -72,11 +72,12 @@ class AuthController extends Controller
             'surname' => 'required|string|max:255',
             'date_of_birth' => 'required|date|before:today',
             'address' => 'required|string|max:1000',
-            'mobile_phone' => 'required|string|max:20',
+            'mobile_phone' => 'required|string|max:20|unique:patients',
             'home_phone' => 'nullable|string|max:20',
             'email' => 'required|string|email|max:255|unique:patients',
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'pin' => 'required|string|size:4|regex:/^[0-9]{4}$/',
             'clinic_id' => 'required|exists:clinics,id',
+            'doctor_id' => 'required|exists:doctors,id',
             'terms_accepted' => 'required|boolean|accepted',
             'data_sharing_consent' => 'required|boolean|accepted',
             'notifications_consent' => 'nullable|boolean',
@@ -98,8 +99,9 @@ class AuthController extends Controller
             'mobile_phone' => $request->mobile_phone,
             'home_phone' => $request->home_phone,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'pin' => Hash::make($request->pin),
             'clinic_id' => $request->clinic_id,
+            'doctor_id' => $request->doctor_id,
             'terms_accepted' => $request->terms_accepted,
             'data_sharing_consent' => $request->data_sharing_consent,
             'notifications_consent' => $request->notifications_consent ?? false,
@@ -111,7 +113,7 @@ class AuthController extends Controller
             'status' => 'success',
             'message' => 'Patient registered successfully',
             'data' => [
-                'patient' => $patient->load('clinic'),
+                'patient' => $patient->load(['clinic', 'doctor']),
                 'token' => $token
             ]
         ], 201);
@@ -125,9 +127,9 @@ class AuthController extends Controller
      *     @OA\RequestBody(
      *         required=true,
      *         @OA\JsonContent(
-     *             required={"email","password"},
-     *             @OA\Property(property="email", type="string", format="email", example="john.smith@example.com"),
-     *             @OA\Property(property="password", type="string", format="password", example="password123")
+     *             required={"mobile_phone","pin"},
+     *             @OA\Property(property="mobile_phone", type="string", example="03172650575"),
+     *             @OA\Property(property="pin", type="string", example="1234")
      *         )
      *     ),
      *     @OA\Response(
@@ -155,8 +157,8 @@ class AuthController extends Controller
     public function login(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required',
+            'mobile_phone' => 'required|string',
+            'pin' => 'required|string|size:4|regex:/^[0-9]{4}$/',
         ]);
 
         if ($validator->fails()) {
@@ -167,9 +169,9 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $patient = Patient::where('email', $request->email)->first();
+        $patient = Patient::where('mobile_phone', $request->mobile_phone)->first();
 
-        if (!$patient || !Hash::check($request->password, $patient->password)) {
+        if (!$patient || !Hash::check($request->pin, $patient->pin)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Invalid credentials'
@@ -183,7 +185,7 @@ class AuthController extends Controller
             'status' => 'success',
             'message' => 'Login successful',
             'data' => [
-                'patient' => $patient->load('clinic'),
+                'patient' => $patient->load(['clinic', 'doctor']),
                 'token' => $token
             ]
         ]);
@@ -235,7 +237,7 @@ class AuthController extends Controller
      */
     public function me(Request $request): JsonResponse
     {
-        $patient = $request->user()->load(['clinic', 'clinicalData']);
+        $patient = $request->user()->load(['clinic', 'doctor', 'clinicalData']);
 
         return response()->json([
             'status' => 'success',

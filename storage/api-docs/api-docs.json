@@ -242,9 +242,9 @@
                                     "address",
                                     "mobile_phone",
                                     "email",
-                                    "password",
-                                    "password_confirmation",
+                                    "pin",
                                     "clinic_id",
+                                    "doctor_id",
                                     "terms_accepted",
                                     "data_sharing_consent"
                                 ],
@@ -268,7 +268,7 @@
                                     },
                                     "mobile_phone": {
                                         "type": "string",
-                                        "example": "07123456789"
+                                        "example": "03172650575"
                                     },
                                     "home_phone": {
                                         "type": "string",
@@ -279,17 +279,15 @@
                                         "format": "email",
                                         "example": "john.smith@example.com"
                                     },
-                                    "password": {
+                                    "pin": {
                                         "type": "string",
-                                        "format": "password",
-                                        "example": "password123"
-                                    },
-                                    "password_confirmation": {
-                                        "type": "string",
-                                        "format": "password",
-                                        "example": "password123"
+                                        "example": "1234"
                                     },
                                     "clinic_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "doctor_id": {
                                         "type": "integer",
                                         "example": 1
                                     },
@@ -379,19 +377,17 @@
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "email",
-                                    "password"
+                                    "mobile_phone",
+                                    "pin"
                                 ],
                                 "properties": {
-                                    "email": {
+                                    "mobile_phone": {
                                         "type": "string",
-                                        "format": "email",
-                                        "example": "john.smith@example.com"
+                                        "example": "03172650575"
                                     },
-                                    "password": {
+                                    "pin": {
                                         "type": "string",
-                                        "format": "password",
-                                        "example": "password123"
+                                        "example": "1234"
                                     }
                                 },
                                 "type": "object"
@@ -1094,6 +1090,80 @@
                 }
             }
         },
+        "/clinics/{id}/doctors": {
+            "get": {
+                "tags": [
+                    "Clinic"
+                ],
+                "summary": "Get doctors by clinic",
+                "operationId": "54600b00bf955bb7343e3fe2024b1505",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Clinic ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Doctors retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "doctors": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Clinic not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Clinic not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/doctors": {
             "get": {
                 "tags": [
@@ -1714,6 +1784,270 @@
                 ]
             }
         },
+        "/ethnicity-codes": {
+            "get": {
+                "tags": [
+                    "Ethnicity Codes"
+                ],
+                "summary": "Get all ethnicity codes",
+                "operationId": "44db531c23bd2d58ca7261add72b1ca0",
+                "responses": {
+                    "200": {
+                        "description": "Ethnicity codes retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "ethnicity_codes": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "grouped_by_category": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ethnicity-codes/{code}": {
+            "get": {
+                "tags": [
+                    "Ethnicity Codes"
+                ],
+                "summary": "Get ethnicity code by code",
+                "operationId": "1f5af237348e889946c9bb776710af8d",
+                "parameters": [
+                    {
+                        "name": "code",
+                        "in": "path",
+                        "description": "Ethnicity code",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "A"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ethnicity code retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "ethnicity_code": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ethnicity code not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ethnicity code not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/medications": {
+            "get": {
+                "tags": [
+                    "Medications"
+                ],
+                "summary": "Get all medications",
+                "operationId": "eee6e2a45471b336fd802165d9bca273",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "Search medications by name",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "amlodipine"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Medications retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "medications": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 18
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/medications/{id}": {
+            "get": {
+                "tags": [
+                    "Medications"
+                ],
+                "summary": "Get medication by ID",
+                "operationId": "a9f37ba728e702484d78894129a72e99",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Medication ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Medication retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "medication": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Medication not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Medication not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/medications/frequency-options": {
+            "get": {
+                "tags": [
+                    "Medications"
+                ],
+                "summary": "Get medication frequency options",
+                "operationId": "8071cfd817930504b8307cac20294361",
+                "responses": {
+                    "200": {
+                        "description": "Frequency options retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "frequency_options": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/patient/profile": {
             "get": {
                 "tags": [
@@ -1784,7 +2118,7 @@
                                     },
                                     "mobile_phone": {
                                         "type": "string",
-                                        "example": "07123456789"
+                                        "example": "03172650575"
                                     },
                                     "home_phone": {
                                         "type": "string",
@@ -1867,6 +2201,120 @@
                                         "data": {
                                             "properties": {
                                                 "clinical_data": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "patient_id": {
+                                                            "type": "integer",
+                                                            "example": 21
+                                                        },
+                                                        "height": {
+                                                            "description": "Height in cm",
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 175
+                                                        },
+                                                        "weight": {
+                                                            "description": "Weight in kg",
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 70
+                                                        },
+                                                        "bmi": {
+                                                            "description": "Calculated BMI (automatically calculated from height and weight)",
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 22.9
+                                                        },
+                                                        "ethnicity_code": {
+                                                            "description": "UK ONS ethnicity code",
+                                                            "type": "string",
+                                                            "example": "A"
+                                                        },
+                                                        "ethnicity_description": {
+                                                            "description": "Ethnicity description",
+                                                            "type": "string",
+                                                            "example": "English, Welsh, Scottish, Northern Irish or British"
+                                                        },
+                                                        "smoking_status": {
+                                                            "description": "Smoking Status: never_smoked, current_smoker, ex_smoker, vaping, occasional_smoker",
+                                                            "type": "string",
+                                                            "example": "never_smoked"
+                                                        },
+                                                        "last_blood_test_date": {
+                                                            "description": "Date of last blood test",
+                                                            "type": "string",
+                                                            "format": "date",
+                                                            "example": "2024-01-15"
+                                                        },
+                                                        "urine_protein_creatinine_ratio": {
+                                                            "description": "Urine Protein:Creatinine Ratio",
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 0.5
+                                                        },
+                                                        "comorbidities": {
+                                                            "description": "Comorbidities: stroke, diabetes_type_1, diabetes_type_2, atrial_fibrillation, transient_ischaemic_attack, chronic_kidney_disease, others",
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string"
+                                                            },
+                                                            "example": [
+                                                                "diabetes_type_2"
+                                                            ]
+                                                        },
+                                                        "others_comorbidities": {
+                                                            "description": "Other comorbidities if 'others' is selected",
+                                                            "type": "string",
+                                                            "example": "Heart condition, Asthma"
+                                                        },
+                                                        "hypertension_diagnosis": {
+                                                            "description": "Hypertension diagnosis: yes, no, dont_know",
+                                                            "type": "string",
+                                                            "example": "yes"
+                                                        },
+                                                        "medications": {
+                                                            "description": "Array of medication objects",
+                                                            "type": "array",
+                                                            "items": {
+                                                                "properties": {
+                                                                    "bnf_code": {
+                                                                        "description": "BNF medication code",
+                                                                        "type": "string",
+                                                                        "example": "0205050A0AA"
+                                                                    },
+                                                                    "dose": {
+                                                                        "description": "Medication dose",
+                                                                        "type": "string",
+                                                                        "example": "5mg"
+                                                                    },
+                                                                    "frequency": {
+                                                                        "description": "Medication frequency",
+                                                                        "type": "string",
+                                                                        "example": "once_daily"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            "example": [
+                                                                {
+                                                                    "bnf_code": "0205050A0AA",
+                                                                    "dose": "5mg",
+                                                                    "frequency": "once_daily"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "created_at": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "updated_at": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        }
+                                                    },
                                                     "type": "object"
                                                 }
                                             },
@@ -1897,37 +2345,30 @@
                         "application/json": {
                             "schema": {
                                 "properties": {
-                                    "height_cm": {
-                                        "type": "integer",
+                                    "height": {
+                                        "description": "Height in cm",
+                                        "type": "number",
+                                        "format": "float",
                                         "example": 175
                                     },
-                                    "height_ft": {
-                                        "type": "integer",
-                                        "example": 5
-                                    },
-                                    "height_inches": {
-                                        "type": "integer",
-                                        "example": 9
-                                    },
-                                    "weight_kg": {
+                                    "weight": {
+                                        "description": "Weight in kg",
                                         "type": "number",
                                         "format": "float",
-                                        "example": 75.5
+                                        "example": 70
                                     },
-                                    "weight_stones": {
-                                        "type": "integer",
-                                        "example": 11
-                                    },
-                                    "weight_lbs": {
-                                        "type": "number",
-                                        "format": "float",
-                                        "example": 13.5
-                                    },
-                                    "ethnicity": {
+                                    "ethnicity_code": {
+                                        "description": "UK ONS ethnicity code - Get available codes from /api/ethnicity-codes",
                                         "type": "string",
-                                        "example": "Asian"
+                                        "example": "A"
+                                    },
+                                    "ethnicity_description": {
+                                        "description": "Ethnicity description - Get from /api/ethnicity-codes",
+                                        "type": "string",
+                                        "example": "English, Welsh, Scottish, Northern Irish or British"
                                     },
                                     "smoking_status": {
+                                        "description": "Smoking Status Options: never_smoked, current_smoker, ex_smoker, vaping, occasional_smoker",
                                         "type": "string",
                                         "enum": [
                                             "never_smoked",
@@ -1935,33 +2376,85 @@
                                             "ex_smoker",
                                             "vaping",
                                             "occasional_smoker"
-                                        ]
+                                        ],
+                                        "example": "never_smoked"
                                     },
-                                    "hypertension_diagnosis": {
-                                        "type": "boolean",
-                                        "example": true
-                                    },
-                                    "medications": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "object"
-                                        }
-                                    },
-                                    "comorbidities": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "last_blood_test": {
+                                    "last_blood_test_date": {
+                                        "description": "Date of last blood test (YYYY-MM-DD format)",
                                         "type": "string",
                                         "format": "date",
                                         "example": "2024-01-15"
                                     },
                                     "urine_protein_creatinine_ratio": {
+                                        "description": "Urine Protein:Creatinine Ratio",
                                         "type": "number",
                                         "format": "float",
                                         "example": 0.5
+                                    },
+                                    "comorbidities": {
+                                        "description": "Comorbidity Options: stroke, diabetes_type_1, diabetes_type_2, atrial_fibrillation, transient_ischaemic_attack, chronic_kidney_disease, others",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "enum": [
+                                                "stroke",
+                                                "diabetes_type_1",
+                                                "diabetes_type_2",
+                                                "atrial_fibrillation",
+                                                "transient_ischaemic_attack",
+                                                "chronic_kidney_disease",
+                                                "others"
+                                            ]
+                                        },
+                                        "example": [
+                                            "diabetes_type_2"
+                                        ]
+                                    },
+                                    "others_comorbidities": {
+                                        "description": "Other comorbidities if 'others' is selected in comorbidities array",
+                                        "type": "string",
+                                        "example": "Heart condition, Asthma"
+                                    },
+                                    "hypertension_diagnosis": {
+                                        "description": "Hypertension Diagnosis Options: yes, no, dont_know",
+                                        "type": "string",
+                                        "enum": [
+                                            "yes",
+                                            "no",
+                                            "dont_know"
+                                        ],
+                                        "example": "yes"
+                                    },
+                                    "medications": {
+                                        "description": "Array of medication objects (only required if hypertension_diagnosis is 'yes')",
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "bnf_code": {
+                                                    "description": "BNF medication code - Get available codes from /api/medications",
+                                                    "type": "string",
+                                                    "example": "0205050A0AA"
+                                                },
+                                                "dose": {
+                                                    "description": "Medication dose (e.g., 5mg, 10mg, 2.5ml)",
+                                                    "type": "string",
+                                                    "example": "5mg"
+                                                },
+                                                "frequency": {
+                                                    "description": "Medication frequency - Get options from /api/medications/frequency-options",
+                                                    "type": "string",
+                                                    "example": "once_daily"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "example": [
+                                            {
+                                                "bnf_code": "0205050A0AA",
+                                                "dose": "5mg",
+                                                "frequency": "once_daily"
+                                            }
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -1987,6 +2480,120 @@
                                         "data": {
                                             "properties": {
                                                 "clinical_data": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "patient_id": {
+                                                            "type": "integer",
+                                                            "example": 21
+                                                        },
+                                                        "height": {
+                                                            "description": "Height in cm",
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 175
+                                                        },
+                                                        "weight": {
+                                                            "description": "Weight in kg",
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 70
+                                                        },
+                                                        "bmi": {
+                                                            "description": "Calculated BMI (automatically calculated from height and weight)",
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 22.9
+                                                        },
+                                                        "ethnicity_code": {
+                                                            "description": "UK ONS ethnicity code",
+                                                            "type": "string",
+                                                            "example": "A"
+                                                        },
+                                                        "ethnicity_description": {
+                                                            "description": "Ethnicity description",
+                                                            "type": "string",
+                                                            "example": "English, Welsh, Scottish, Northern Irish or British"
+                                                        },
+                                                        "smoking_status": {
+                                                            "description": "Smoking Status: never_smoked, current_smoker, ex_smoker, vaping, occasional_smoker",
+                                                            "type": "string",
+                                                            "example": "never_smoked"
+                                                        },
+                                                        "last_blood_test_date": {
+                                                            "description": "Date of last blood test",
+                                                            "type": "string",
+                                                            "format": "date",
+                                                            "example": "2024-01-15"
+                                                        },
+                                                        "urine_protein_creatinine_ratio": {
+                                                            "description": "Urine Protein:Creatinine Ratio",
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 0.5
+                                                        },
+                                                        "comorbidities": {
+                                                            "description": "Comorbidities: stroke, diabetes_type_1, diabetes_type_2, atrial_fibrillation, transient_ischaemic_attack, chronic_kidney_disease, others",
+                                                            "type": "array",
+                                                            "items": {
+                                                                "type": "string"
+                                                            },
+                                                            "example": [
+                                                                "diabetes_type_2"
+                                                            ]
+                                                        },
+                                                        "others_comorbidities": {
+                                                            "description": "Other comorbidities if 'others' is selected",
+                                                            "type": "string",
+                                                            "example": "Heart condition, Asthma"
+                                                        },
+                                                        "hypertension_diagnosis": {
+                                                            "description": "Hypertension diagnosis: yes, no, dont_know",
+                                                            "type": "string",
+                                                            "example": "yes"
+                                                        },
+                                                        "medications": {
+                                                            "description": "Array of medication objects",
+                                                            "type": "array",
+                                                            "items": {
+                                                                "properties": {
+                                                                    "bnf_code": {
+                                                                        "description": "BNF medication code",
+                                                                        "type": "string",
+                                                                        "example": "0205050A0AA"
+                                                                    },
+                                                                    "dose": {
+                                                                        "description": "Medication dose",
+                                                                        "type": "string",
+                                                                        "example": "5mg"
+                                                                    },
+                                                                    "frequency": {
+                                                                        "description": "Medication frequency",
+                                                                        "type": "string",
+                                                                        "example": "once_daily"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            },
+                                                            "example": [
+                                                                {
+                                                                    "bnf_code": "0205050A0AA",
+                                                                    "dose": "5mg",
+                                                                    "frequency": "once_daily"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "created_at": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "updated_at": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        }
+                                                    },
                                                     "type": "object"
                                                 }
                                             },
@@ -2973,6 +3580,14 @@
         {
             "name": "Clinic",
             "description": "Clinic search and management"
+        },
+        {
+            "name": "Ethnicity Codes",
+            "description": "UK ONS ethnicity codes"
+        },
+        {
+            "name": "Medications",
+            "description": "BNF-linked medications"
         },
         {
             "name": "Patient",

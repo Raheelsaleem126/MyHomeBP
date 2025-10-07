@@ -10,6 +10,8 @@ use App\Http\Controllers\Api\ClinicController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\SpecialityController;
 use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\EthnicityCodeController;
+use App\Http\Controllers\Api\MedicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +41,7 @@ Route::prefix('clinics')->group(function () {
     Route::get('nearby', [ClinicController::class, 'nearby']);
     Route::get('/', [ClinicController::class, 'index']);
     Route::get('{id}', [ClinicController::class, 'show']);
+    Route::get('{id}/doctors', [ClinicController::class, 'doctors']);
 });
 
 // Specialities (public)
@@ -52,6 +55,19 @@ Route::prefix('specialities')->group(function () {
 Route::prefix('doctors')->group(function () {
     Route::get('/', [DoctorController::class, 'index']);
     Route::get('{id}', [DoctorController::class, 'show']);
+});
+
+// Ethnicity Codes (public)
+Route::prefix('ethnicity-codes')->group(function () {
+    Route::get('/', [EthnicityCodeController::class, 'index']);
+    Route::get('{code}', [EthnicityCodeController::class, 'show']);
+});
+
+// Medications (public)
+Route::prefix('medications')->group(function () {
+    Route::get('/', [MedicationController::class, 'index']);
+    Route::get('frequency-options', [MedicationController::class, 'frequencyOptions']);
+    Route::get('{id}', [MedicationController::class, 'show']);
 });
 
 // Protected routes (require authentication)
