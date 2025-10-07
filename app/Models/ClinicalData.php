@@ -17,20 +17,18 @@ class ClinicalData extends Model
      */
     protected $fillable = [
         'patient_id',
-        'height_cm',
-        'height_ft',
-        'height_inches',
-        'weight_kg',
-        'weight_stones',
-        'weight_lbs',
+        'height',
+        'weight',
         'bmi',
-        'ethnicity',
+        'ethnicity_code',
+        'ethnicity_description',
         'smoking_status',
+        'last_blood_test_date',
+        'urine_protein_creatinine_ratio',
+        'comorbidities',
+        'others_comorbidities',
         'hypertension_diagnosis',
         'medications',
-        'comorbidities',
-        'last_blood_test',
-        'urine_protein_creatinine_ratio',
     ];
 
     /**
@@ -41,18 +39,13 @@ class ClinicalData extends Model
     protected function casts(): array
     {
         return [
-            'height_cm' => 'integer',
-            'height_ft' => 'integer',
-            'height_inches' => 'integer',
-            'weight_kg' => 'decimal:2',
-            'weight_stones' => 'integer',
-            'weight_lbs' => 'decimal:2',
+            'height' => 'decimal:2',
+            'weight' => 'decimal:2',
             'bmi' => 'decimal:1',
-            'hypertension_diagnosis' => 'boolean',
-            'medications' => 'array',
-            'comorbidities' => 'array',
-            'last_blood_test' => 'date',
+            'last_blood_test_date' => 'date',
             'urine_protein_creatinine_ratio' => 'decimal:2',
+            'comorbidities' => 'array',
+            'medications' => 'array',
         ];
     }
 
@@ -69,12 +62,26 @@ class ClinicalData extends Model
      */
     public function calculateBmi(): ?float
     {
-        if ($this->height_cm && $this->weight_kg) {
-            $heightInMeters = $this->height_cm / 100;
-            return round($this->weight_kg / ($heightInMeters * $heightInMeters), 1);
+        if ($this->height && $this->weight) {
+            $heightInMeters = $this->height / 100;
+            return round($this->weight / ($heightInMeters * $heightInMeters), 1);
         }
         
         return null;
+    }
+
+    /**
+     * Auto-calculate BMI when height or weight is updated.
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($model) {
+            if ($model->height && $model->weight) {
+                $model->bmi = $model->calculateBmi();
+            }
+        });
     }
 
     /**
@@ -123,6 +130,82 @@ class ClinicalData extends Model
             'atrial_fibrillation' => 'Atrial Fibrillation',
             'transient_ischaemic_attack' => 'Transient Ischaemic Attack',
             'chronic_kidney_disease' => 'Chronic Kidney Disease',
+            'others' => 'Others',
         ];
+    }
+
+    /**
+     * Get hypertension diagnosis options.
+     */
+    public static function getHypertensionDiagnosisOptions(): array
+    {
+        return [
+            'yes' => 'Yes',
+            'no' => 'No',
+            'dont_know' => 'Don\'t Know',
+        ];
+    }
+
+    /**
+     * Get ethnicity code relationship.
+     */
+    public function ethnicityCode(): BelongsTo
+    {
+        return $this->belongsTo(EthnicityCode::class, 'ethnicity_code', 'code');
+    }
+
+    /**
+     * Get formatted medications.
+     */
+    public function getFormattedMedicationsAttribute(): array
+    {
+        if (!$this->medications) {
+            return [];
+        }
+
+        $formatted = [];
+        foreach ($this->medications as $medication) {
+            $formatted[] = [
+                'bnf_code' => $medication['bnf_code'] ?? null,
+                'generic_name' => $medication['generic_name'] ?? null,
+                'brand_name' => $medication['brand_name'] ?? null,
+                'dose' => $medication['dose'] ?? null,
+                'frequency' => $medication['frequency'] ?? null,
+                'form' => $medication['form'] ?? null,
+            ];
+        }
+
+        return $formatted;
+    }
+
+    /**
+     * Get formatted comorbidities.
+     */
+    public function getFormattedComorbiditiesAttribute(): array
+    {
+        if (!$this->comorbidities) {
+            return [];
+        }
+
+        $formatted = [];
+        $options = self::getComorbidityOptions();
+        
+        foreach ($this->comorbidities as $comorbidity) {
+            if ($comorbidity === 'others') {
+                $formatted[] = [
+                    'code' => 'others',
+                    'name' => 'Others',
+                    'description' => $this->others_comorbidities
+                ];
+            } else {
+                $formatted[] = [
+                    'code' => $comorbidity,
+                    'name' => $options[$comorbidity] ?? $comorbidity,
+                    'description' => null
+                ];
+            }
+        }
+
+        return $formatted;
     }
 }
