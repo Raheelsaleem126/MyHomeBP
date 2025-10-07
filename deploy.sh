@@ -40,5 +40,6 @@ chmod -R 755 storage
 chmod -R 755 bootstrap/cache
 
 echo "✅ Deployment completed successfully!"
-echo "🌐 Your API is ready at: https://your-app.railway.app"
-echo "📖 Swagger UI: https://your-app.railway.app/docs"
+echo "🌐 Your API is ready!"
+echo "📖 Swagger UI: http://3.250.60.71/api/documentation"
+echo "📚 API Docs: http://3.250.60.71/docs"

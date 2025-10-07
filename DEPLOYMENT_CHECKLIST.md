@@ -6,31 +6,32 @@ Your MyHomeBP API is now fully prepared for deployment to any hosting platform.
 
 ## 📁 **Files Created for Deployment:**
 
-✅ **railway.json** - Railway deployment configuration  
+✅ **ec2-deploy.sh** - EC2 deployment script  
 ✅ **Dockerfile** - Container configuration  
 ✅ **docker/nginx.conf** - Nginx web server config  
 ✅ **docker/supervisord.conf** - Process management  
 ✅ **config/cors.php** - CORS configuration for mobile apps  
-✅ **deploy.sh** - Deployment script  
+✅ **deploy.sh** - General deployment script  
 ✅ **DEPLOYMENT.md** - Complete deployment guide  
+✅ **EC2_DEPLOYMENT.md** - Detailed EC2 deployment guide  
 
-## 🎯 **Recommended Hosting: Railway**
+## 🎯 **Recommended Hosting: EC2 or VPS**
 
-**Why Railway?**
-- ✅ Free tier with $5 credit monthly
-- ✅ Automatic MySQL database
-- ✅ HTTPS/SSL included
-- ✅ Auto-deploy from GitHub
-- ✅ Easy environment variables
-- ✅ Built-in monitoring
+**Why EC2/VPS?**
+- ✅ Full control over server environment
+- ✅ Cost-effective for long-term use
+- ✅ Custom domain support
+- ✅ SSL certificates (Let's Encrypt)
+- ✅ Scalable infrastructure
+- ✅ Database control
 
 ## 📱 **For Your Android Developer:**
 
 Once deployed, they'll have access to:
 
-**🌐 Live API Base URL:** `https://your-app.railway.app/api`  
-**📖 Swagger Documentation:** `https://your-app.railway.app/docs`  
-**❤️ Health Check:** `https://your-app.railway.app/api/health`  
+**🌐 Live API Base URL:** `https://your-domain.com/api`  
+**📖 Swagger Documentation:** `https://your-domain.com/api/documentation`  
+**❤️ Health Check:** `https://your-domain.com/api/health`  
 
 ## 🔧 **Quick Deployment Steps:**
 
@@ -41,13 +42,11 @@ Once deployed, they'll have access to:
    git push origin main
    ```
 
-2. **Deploy on Railway:**
-   - Go to [railway.app](https://railway.app)
-   - Click "New Project" → "Deploy from GitHub"
-   - Select your repository
-   - Add MySQL database
-   - Set environment variables
-   - Deploy! 🚀
+2. **Deploy on EC2:**
+   - Set up EC2 instance
+   - Follow [EC2_DEPLOYMENT.md](EC2_DEPLOYMENT.md) guide
+   - Run `./ec2-deploy.sh` script
+   - Configure SSL certificates
 
 3. **Share with Android Developer:**
    - Send them the live URL
@@ -56,8 +55,9 @@ Once deployed, they'll have access to:
 
 ## 🧪 **Test Data Available:**
 
-- ✅ **5 Test Patients** registered
-- ✅ **14 Blood Pressure Readings** (7 days × 2 readings)
+- ✅ **15 Test Patients** registered
+- ✅ **11 Clinical Data records** 
+- ✅ **27 Blood Pressure Readings** seeded
 - ✅ **10 Clinics** seeded
 - ✅ **Working Averages** calculated
 - ✅ **Authentication** working
@@ -82,18 +82,19 @@ Once deployed, they'll have access to:
 
 - ✅ **Health check** endpoint
 - ✅ **Error logging** configured
-- ✅ **Performance monitoring** (Railway)
-- ✅ **Automatic scaling** (Railway)
+- ✅ **Database test** endpoint
+- ✅ **Performance monitoring** capabilities
 
 ## 🎉 **You're All Set!**
 
 Your MyHomeBP API is production-ready and can be deployed immediately. The Android developer will have access to a fully functional API with comprehensive documentation and test data.
 
 **Next Steps:**
-1. Deploy to Railway (5 minutes)
-2. Share live URL with Android developer
-3. Start mobile app development! 📱
+1. Deploy to EC2 or your preferred hosting platform
+2. Configure SSL certificates
+3. Share live URL with Android developer
+4. Start mobile app development! 📱
 
 ---
 
-**🚀 Deploy now and get your API live in minutes!**
+**🚀 Deploy now and get your API live!**
