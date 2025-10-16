@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ethnicity_codes', function (Blueprint $table) {
+        Schema::create('comorbidities', function (Blueprint $table) {
             $table->id();
-            $table->string('code', 10)->unique()->comment('UK ONS ethnicity code');
-            $table->string('description')->comment('Ethnicity description');
-            $table->string('category')->nullable()->comment('Ethnicity category');
+            $table->string('code', 50)->unique()->comment('Comorbidity code (e.g., stroke, diabetes_type_1)');
+            $table->string('name')->comment('Comorbidity name');
+            $table->text('description')->nullable()->comment('Detailed description');
             $table->boolean('is_active')->default(true);
+            $table->integer('sort_order')->default(0)->comment('Order for display');
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ethnicity_codes');
+        Schema::dropIfExists('comorbidities');
     }
 };

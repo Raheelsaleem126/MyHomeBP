@@ -135,7 +135,6 @@ class PatientController extends Controller
      *             @OA\Property(property="last_blood_test_date", type="string", format="date", example="2024-01-15", description="Date of last blood test (YYYY-MM-DD format)"),
      *             @OA\Property(property="urine_protein_creatinine_ratio", type="number", format="float", example=0.5, description="Urine Protein:Creatinine Ratio"),
      *             @OA\Property(property="comorbidities", type="array", @OA\Items(type="string", enum={"stroke","diabetes_type_1","diabetes_type_2","atrial_fibrillation","transient_ischaemic_attack","chronic_kidney_disease","others"}), example={"diabetes_type_2"}, description="Comorbidity Options: stroke, diabetes_type_1, diabetes_type_2, atrial_fibrillation, transient_ischaemic_attack, chronic_kidney_disease, others"),
-     *             @OA\Property(property="others_comorbidities", type="string", example="Heart condition, Asthma", description="Other comorbidities if 'others' is selected in comorbidities array"),
      *             @OA\Property(property="hypertension_diagnosis", type="string", enum={"yes","no","dont_know"}, example="yes", description="Hypertension Diagnosis Options: yes, no, dont_know"),
      *             @OA\Property(property="medications", type="array", @OA\Items(
      *                 @OA\Property(property="bnf_code", type="string", example="0205050A0AA", description="BNF medication code - Get available codes from /api/medications"),
@@ -163,7 +162,6 @@ class PatientController extends Controller
      *                     @OA\Property(property="last_blood_test_date", type="string", format="date", example="2024-01-15", description="Date of last blood test"),
      *                     @OA\Property(property="urine_protein_creatinine_ratio", type="number", format="float", example=0.5, description="Urine Protein:Creatinine Ratio"),
      *                     @OA\Property(property="comorbidities", type="array", @OA\Items(type="string"), example={"diabetes_type_2"}, description="Comorbidities: stroke, diabetes_type_1, diabetes_type_2, atrial_fibrillation, transient_ischaemic_attack, chronic_kidney_disease, others"),
-     *                     @OA\Property(property="others_comorbidities", type="string", example="Heart condition, Asthma", description="Other comorbidities if 'others' is selected"),
      *                     @OA\Property(property="hypertension_diagnosis", type="string", example="yes", description="Hypertension diagnosis: yes, no, dont_know"),
      *                     @OA\Property(property="medications", type="array", @OA\Items(
      *                         @OA\Property(property="bnf_code", type="string", example="0205050A0AA", description="BNF medication code"),
@@ -192,12 +190,11 @@ class PatientController extends Controller
             'urine_protein_creatinine_ratio' => 'nullable|numeric|min:0|max:1000',
             'comorbidities' => 'nullable|array',
             'comorbidities.*' => 'in:stroke,diabetes_type_1,diabetes_type_2,atrial_fibrillation,transient_ischaemic_attack,chronic_kidney_disease,others',
-            'others_comorbidities' => 'nullable|string|max:1000',
             'hypertension_diagnosis' => 'nullable|in:yes,no,dont_know',
-            'medications' => 'nullable|array',
-            'medications.*.bnf_code' => 'required_with:medications|string|exists:medications,bnf_code',
-            'medications.*.dose' => 'required_with:medications|string|max:50',
-            'medications.*.frequency' => 'required_with:medications|string|max:50',
+            'medications' => 'required_if:hypertension_diagnosis,yes|array|min:1',
+            'medications.*.bnf_code' => 'required_if:hypertension_diagnosis,yes|string|exists:medications,bnf_code',
+            'medications.*.dose' => 'required_if:hypertension_diagnosis,yes|string|max:50',
+            'medications.*.frequency' => 'required_if:hypertension_diagnosis,yes|string|max:50',
         ]);
 
         if ($validator->fails()) {
@@ -218,7 +215,6 @@ class PatientController extends Controller
             'last_blood_test_date',
             'urine_protein_creatinine_ratio',
             'comorbidities',
-            'others_comorbidities',
             'hypertension_diagnosis',
             'medications'
         ]);
@@ -263,7 +259,6 @@ class PatientController extends Controller
      *                     @OA\Property(property="last_blood_test_date", type="string", format="date", example="2024-01-15", description="Date of last blood test"),
      *                     @OA\Property(property="urine_protein_creatinine_ratio", type="number", format="float", example=0.5, description="Urine Protein:Creatinine Ratio"),
      *                     @OA\Property(property="comorbidities", type="array", @OA\Items(type="string"), example={"diabetes_type_2"}, description="Comorbidities: stroke, diabetes_type_1, diabetes_type_2, atrial_fibrillation, transient_ischaemic_attack, chronic_kidney_disease, others"),
-     *                     @OA\Property(property="others_comorbidities", type="string", example="Heart condition, Asthma", description="Other comorbidities if 'others' is selected"),
      *                     @OA\Property(property="hypertension_diagnosis", type="string", example="yes", description="Hypertension diagnosis: yes, no, dont_know"),
      *                     @OA\Property(property="medications", type="array", @OA\Items(
      *                         @OA\Property(property="bnf_code", type="string", example="0205050A0AA", description="BNF medication code"),

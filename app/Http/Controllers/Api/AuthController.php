@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use App\Models\Clinic;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password;
 
 /**
@@ -28,15 +31,15 @@ class AuthController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             required={"first_name","surname","date_of_birth","address","mobile_phone","email","pin","clinic_id","doctor_id","terms_accepted","data_sharing_consent"},
-     *             @OA\Property(property="first_name", type="string", example="John"),
-     *             @OA\Property(property="surname", type="string", example="Smith"),
-     *             @OA\Property(property="date_of_birth", type="string", format="date", example="1980-03-15"),
-     *             @OA\Property(property="address", type="string", example="123 Main Street, London"),
+     *             @OA\Property(property="first_name", type="string", example="Raheel"),
+     *             @OA\Property(property="surname", type="string", example="Saleem"),
+     *             @OA\Property(property="date_of_birth", type="string", format="date", example="1997-08-26"),
+     *             @OA\Property(property="address", type="string", example="74 Woodford Avenue, E17 6LH"),
      *             @OA\Property(property="mobile_phone", type="string", example="03172650575"),
-     *             @OA\Property(property="home_phone", type="string", example="02012345678"),
-     *             @OA\Property(property="email", type="string", format="email", example="john.smith@example.com"),
-     *             @OA\Property(property="pin", type="string", example="1234"),
-     *             @OA\Property(property="clinic_id", type="integer", example=1),
+     *             @OA\Property(property="home_phone", type="string", example="03363860313"),
+     *             @OA\Property(property="email", type="string", format="email", example="raheelsaleem.se@gmail.com"),
+     *             @OA\Property(property="pin", type="string", example="1111"),
+     *             @OA\Property(property="clinic_id", type="integer", example=4),
      *             @OA\Property(property="doctor_id", type="integer", example=1),
      *             @OA\Property(property="terms_accepted", type="boolean", example=true),
      *             @OA\Property(property="data_sharing_consent", type="boolean", example=true),
@@ -129,7 +132,7 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"mobile_phone","pin"},
      *             @OA\Property(property="mobile_phone", type="string", example="03172650575"),
-     *             @OA\Property(property="pin", type="string", example="1234")
+     *             @OA\Property(property="pin", type="string", example="1111")
      *         )
      *     ),
      *     @OA\Response(
@@ -244,6 +247,157 @@ class AuthController extends Controller
             'data' => [
                 'patient' => $patient
             ]
+        ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/auth/forgot-password",
+     *     summary="Request password reset",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *             @OA\Property(property="email", type="string", format="email", example="raheelsaleem.se@gmail.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset link sent successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Password reset link sent to your email")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Email not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Email not found")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
+    public function forgotPassword(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email'
+        ]);
+
+        $token = Str::random(64);
+        
+        // Store the reset token
+        DB::table('password_reset_tokens')->updateOrInsert(
+            ['email' => $request->email],
+            [
+                'token' => Hash::make($token),
+                'created_at' => now()
+            ]
+        );
+
+        // Send reset email (you can implement email sending here)
+        // For now, we'll just return success
+        // In production, you would send an email with the reset link
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password reset link sent to your email',
+            'reset_token' => $token // Remove this in production - only for testing
+        ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/auth/reset-password",
+     *     summary="Reset password with token",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","token","password","password_confirmation"},
+     *             @OA\Property(property="email", type="string", format="email", example="raheelsaleem.se@gmail.com"),
+     *             @OA\Property(property="token", type="string", example="abc123..."),
+     *             @OA\Property(property="password", type="string", example="newpassword123"),
+     *             @OA\Property(property="password_confirmation", type="string", example="newpassword123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Password reset successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Password reset successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid or expired token",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="message", type="string", example="Invalid or expired reset token")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
+    public function resetPassword(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'token' => 'required|string',
+            'password' => 'required|string|min:4|confirmed',
+            'password_confirmation' => 'required|string|min:4'
+        ]);
+
+        // Check if token exists and is valid
+        $passwordReset = DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->first();
+
+        if (!$passwordReset || !Hash::check($request->token, $passwordReset->token)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invalid or expired reset token'
+            ], 400);
+        }
+
+        // Check if token is not expired (24 hours)
+        if (now()->diffInHours($passwordReset->created_at) > 24) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Reset token has expired'
+            ], 400);
+        }
+
+        // Update user password
+        $user = User::where('email', $request->email)->first();
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        // Delete the reset token
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Password reset successfully'
         ]);
     }
 }

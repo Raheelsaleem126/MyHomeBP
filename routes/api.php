@@ -10,7 +10,8 @@ use App\Http\Controllers\Api\ClinicController;
 use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\SpecialityController;
 use App\Http\Controllers\Api\ReportController;
-use App\Http\Controllers\Api\EthnicityCodeController;
+use App\Http\Controllers\Api\EthnicityController;
+use App\Http\Controllers\Api\ComorbidityController;
 use App\Http\Controllers\Api\MedicationController;
 
 /*
@@ -28,6 +29,8 @@ use App\Http\Controllers\Api\MedicationController;
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
+    Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('reset-password', [AuthController::class, 'resetPassword']);
 });
 
 // Admin authentication routes (public)
@@ -57,10 +60,20 @@ Route::prefix('doctors')->group(function () {
     Route::get('{id}', [DoctorController::class, 'show']);
 });
 
-// Ethnicity Codes (public)
-Route::prefix('ethnicity-codes')->group(function () {
-    Route::get('/', [EthnicityCodeController::class, 'index']);
-    Route::get('{code}', [EthnicityCodeController::class, 'show']);
+// Ethnicity structure (public) - Hierarchical UK ONS ethnicity codes
+Route::prefix('ethnicity')->group(function () {
+    Route::get('categories', [EthnicityController::class, 'categories']);
+    Route::get('categories/{id}', [EthnicityController::class, 'showCategory']);
+    Route::get('subcategories', [EthnicityController::class, 'subcategories']);
+    Route::get('subcategories/{id}', [EthnicityController::class, 'showSubcategory']);
+    Route::get('categories/{categoryId}/subcategories', [EthnicityController::class, 'categorySubcategories']);
+    Route::get('hierarchy', [EthnicityController::class, 'hierarchy']);
+});
+
+// Comorbidities (public)
+Route::prefix('comorbidities')->group(function () {
+    Route::get('/', [ComorbidityController::class, 'index']);
+    Route::get('{id}', [ComorbidityController::class, 'show']);
 });
 
 // Medications (public)

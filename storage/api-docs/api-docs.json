@@ -251,20 +251,20 @@
                                 "properties": {
                                     "first_name": {
                                         "type": "string",
-                                        "example": "John"
+                                        "example": "Raheel"
                                     },
                                     "surname": {
                                         "type": "string",
-                                        "example": "Smith"
+                                        "example": "Saleem"
                                     },
                                     "date_of_birth": {
                                         "type": "string",
                                         "format": "date",
-                                        "example": "1980-03-15"
+                                        "example": "1997-08-26"
                                     },
                                     "address": {
                                         "type": "string",
-                                        "example": "123 Main Street, London"
+                                        "example": "74 Woodford Avenue, E17 6LH"
                                     },
                                     "mobile_phone": {
                                         "type": "string",
@@ -272,20 +272,20 @@
                                     },
                                     "home_phone": {
                                         "type": "string",
-                                        "example": "02012345678"
+                                        "example": "03363860313"
                                     },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "john.smith@example.com"
+                                        "example": "raheelsaleem.se@gmail.com"
                                     },
                                     "pin": {
                                         "type": "string",
-                                        "example": "1234"
+                                        "example": "1111"
                                     },
                                     "clinic_id": {
                                         "type": "integer",
-                                        "example": 1
+                                        "example": 4
                                     },
                                     "doctor_id": {
                                         "type": "integer",
@@ -387,7 +387,7 @@
                                     },
                                     "pin": {
                                         "type": "string",
-                                        "example": "1234"
+                                        "example": "1111"
                                     }
                                 },
                                 "type": "object"
@@ -525,6 +525,201 @@
                         "sanctum": []
                     }
                 ]
+            }
+        },
+        "/auth/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Request password reset",
+                "operationId": "fea89d2766defe4ad877001920e3f289",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "raheelsaleem.se@gmail.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset link sent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset link sent to your email"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Email not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Email not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/reset-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Reset password with token",
+                "operationId": "b8d03d5b689dcb65d3771f62d4f90a24",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "token",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "raheelsaleem.se@gmail.com"
+                                    },
+                                    "token": {
+                                        "type": "string",
+                                        "example": "abc123..."
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "newpassword123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "newpassword123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Password reset successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid or expired token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid or expired reset token"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/blood-pressure/record": {
@@ -1164,6 +1359,111 @@
                 }
             }
         },
+        "/comorbidities": {
+            "get": {
+                "tags": [
+                    "Comorbidities"
+                ],
+                "summary": "Get all comorbidities",
+                "operationId": "a67f2a28c2da8cc8d439fe65eeb0f1ec",
+                "responses": {
+                    "200": {
+                        "description": "Comorbidities retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "comorbidities": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comorbidities/{id}": {
+            "get": {
+                "tags": [
+                    "Comorbidities"
+                ],
+                "summary": "Get comorbidity by ID",
+                "operationId": "59b000b3a27fd8d24d6b92593dd29986",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Comorbidity ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comorbidity retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "comorbidity": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Comorbidity not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Comorbidity not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/doctors": {
             "get": {
                 "tags": [
@@ -1784,16 +2084,16 @@
                 ]
             }
         },
-        "/ethnicity-codes": {
+        "/ethnicity/categories": {
             "get": {
                 "tags": [
-                    "Ethnicity Codes"
+                    "Ethnicity"
                 ],
-                "summary": "Get all ethnicity codes",
-                "operationId": "44db531c23bd2d58ca7261add72b1ca0",
+                "summary": "Get all main ethnicity categories",
+                "operationId": "9170d2536952b6d18c82137fa5c2e1d1",
                 "responses": {
                     "200": {
-                        "description": "Ethnicity codes retrieved successfully",
+                        "description": "Main ethnicity categories retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1804,14 +2104,11 @@
                                         },
                                         "data": {
                                             "properties": {
-                                                "ethnicity_codes": {
+                                                "categories": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "object"
                                                     }
-                                                },
-                                                "grouped_by_category": {
-                                                    "type": "object"
                                                 }
                                             },
                                             "type": "object"
@@ -1825,28 +2122,28 @@
                 }
             }
         },
-        "/ethnicity-codes/{code}": {
+        "/ethnicity/categories/{id}": {
             "get": {
                 "tags": [
-                    "Ethnicity Codes"
+                    "Ethnicity"
                 ],
-                "summary": "Get ethnicity code by code",
-                "operationId": "1f5af237348e889946c9bb776710af8d",
+                "summary": "Get main ethnicity category by ID",
+                "operationId": "bbc81724c9afaf0366ce384aaa4ecfef",
                 "parameters": [
                     {
-                        "name": "code",
+                        "name": "id",
                         "in": "path",
-                        "description": "Ethnicity code",
+                        "description": "Main category ID",
                         "required": true,
                         "schema": {
-                            "type": "string",
-                            "example": "A"
+                            "type": "integer",
+                            "example": "1"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Ethnicity code retrieved successfully",
+                        "description": "Main ethnicity category retrieved successfully",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1857,7 +2154,7 @@
                                         },
                                         "data": {
                                             "properties": {
-                                                "ethnicity_code": {
+                                                "category": {
                                                     "type": "object"
                                                 }
                                             },
@@ -1870,7 +2167,7 @@
                         }
                     },
                     "404": {
-                        "description": "Ethnicity code not found",
+                        "description": "Main ethnicity category not found",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1881,7 +2178,212 @@
                                         },
                                         "message": {
                                             "type": "string",
-                                            "example": "Ethnicity code not found"
+                                            "example": "Main ethnicity category not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ethnicity/subcategories": {
+            "get": {
+                "tags": [
+                    "Ethnicity"
+                ],
+                "summary": "Get ethnicity subcategories",
+                "operationId": "819b86b84ee4f8c5cfebb2a34695217b",
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Filter by main category ID",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ethnicity subcategories retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "subcategories": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ethnicity/subcategories/{id}": {
+            "get": {
+                "tags": [
+                    "Ethnicity"
+                ],
+                "summary": "Get ethnicity subcategory by ID",
+                "operationId": "bdbc2929eb3f2667d68b0a418b5651e3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Subcategory ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ethnicity subcategory retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "subcategory": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ethnicity subcategory not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Ethnicity subcategory not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ethnicity/categories/{categoryId}/subcategories": {
+            "get": {
+                "tags": [
+                    "Ethnicity"
+                ],
+                "summary": "Get subcategories for a specific main category",
+                "operationId": "eef9ed071d01061f9a800f932f5de8e0",
+                "parameters": [
+                    {
+                        "name": "categoryId",
+                        "in": "path",
+                        "description": "Main category ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ethnicity subcategories retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "subcategories": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/ethnicity/hierarchy": {
+            "get": {
+                "tags": [
+                    "Ethnicity"
+                ],
+                "summary": "Get complete ethnicity hierarchy (categories with their subcategories)",
+                "operationId": "6c7256d4a901a6356a13876937f6aeec",
+                "responses": {
+                    "200": {
+                        "description": "Complete ethnicity hierarchy retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "hierarchy": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -2265,11 +2767,6 @@
                                                                 "diabetes_type_2"
                                                             ]
                                                         },
-                                                        "others_comorbidities": {
-                                                            "description": "Other comorbidities if 'others' is selected",
-                                                            "type": "string",
-                                                            "example": "Heart condition, Asthma"
-                                                        },
                                                         "hypertension_diagnosis": {
                                                             "description": "Hypertension diagnosis: yes, no, dont_know",
                                                             "type": "string",
@@ -2410,11 +2907,6 @@
                                             "diabetes_type_2"
                                         ]
                                     },
-                                    "others_comorbidities": {
-                                        "description": "Other comorbidities if 'others' is selected in comorbidities array",
-                                        "type": "string",
-                                        "example": "Heart condition, Asthma"
-                                    },
                                     "hypertension_diagnosis": {
                                         "description": "Hypertension Diagnosis Options: yes, no, dont_know",
                                         "type": "string",
@@ -2543,11 +3035,6 @@
                                                             "example": [
                                                                 "diabetes_type_2"
                                                             ]
-                                                        },
-                                                        "others_comorbidities": {
-                                                            "description": "Other comorbidities if 'others' is selected",
-                                                            "type": "string",
-                                                            "example": "Heart condition, Asthma"
                                                         },
                                                         "hypertension_diagnosis": {
                                                             "description": "Hypertension diagnosis: yes, no, dont_know",
@@ -3582,8 +4069,12 @@
             "description": "Clinic search and management"
         },
         {
-            "name": "Ethnicity Codes",
-            "description": "UK ONS ethnicity codes"
+            "name": "Comorbidities",
+            "description": "Medical comorbidities for patient clinical data"
+        },
+        {
+            "name": "Ethnicity",
+            "description": "UK ONS ethnicity categories and subcategories"
         },
         {
             "name": "Medications",
