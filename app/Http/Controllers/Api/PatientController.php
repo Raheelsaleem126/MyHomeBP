@@ -191,10 +191,10 @@ class PatientController extends Controller
             'comorbidities' => 'nullable|array',
             'comorbidities.*' => 'in:stroke,diabetes_type_1,diabetes_type_2,atrial_fibrillation,transient_ischaemic_attack,chronic_kidney_disease,others',
             'hypertension_diagnosis' => 'nullable|in:yes,no,dont_know',
-            'medications' => 'nullable|array',
-            'medications.*.bnf_code' => 'required_with:medications|string|exists:medications,bnf_code',
-            'medications.*.dose' => 'required_with:medications|string|max:50',
-            'medications.*.frequency' => 'required_with:medications|string|max:50',
+            'medications' => 'required_if:hypertension_diagnosis,yes|array|min:1',
+            'medications.*.bnf_code' => 'required_if:hypertension_diagnosis,yes|string|exists:medications,bnf_code',
+            'medications.*.dose' => 'required_if:hypertension_diagnosis,yes|string|max:50',
+            'medications.*.frequency' => 'required_if:hypertension_diagnosis,yes|string|max:50',
         ]);
 
         if ($validator->fails()) {
