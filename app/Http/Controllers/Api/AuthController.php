@@ -28,15 +28,15 @@ class AuthController extends Controller
      *         required=true,
      *         @OA\JsonContent(
      *             required={"first_name","surname","date_of_birth","address","mobile_phone","email","pin","clinic_id","doctor_id","terms_accepted","data_sharing_consent"},
-     *             @OA\Property(property="first_name", type="string", example="John"),
-     *             @OA\Property(property="surname", type="string", example="Smith"),
-     *             @OA\Property(property="date_of_birth", type="string", format="date", example="1980-03-15"),
-     *             @OA\Property(property="address", type="string", example="123 Main Street, London"),
+     *             @OA\Property(property="first_name", type="string", example="Raheel"),
+     *             @OA\Property(property="surname", type="string", example="Saleem"),
+     *             @OA\Property(property="date_of_birth", type="string", format="date", example="1997-08-26"),
+     *             @OA\Property(property="address", type="string", example="74 Woodford Avenue, E17 6LH"),
      *             @OA\Property(property="mobile_phone", type="string", example="03172650575"),
-     *             @OA\Property(property="home_phone", type="string", example="02012345678"),
-     *             @OA\Property(property="email", type="string", format="email", example="john.smith@example.com"),
-     *             @OA\Property(property="pin", type="string", example="1234"),
-     *             @OA\Property(property="clinic_id", type="integer", example=1),
+     *             @OA\Property(property="home_phone", type="string", example="03363860313"),
+     *             @OA\Property(property="email", type="string", format="email", example="raheelsaleem.se@gmail.com"),
+     *             @OA\Property(property="pin", type="string", example="1111"),
+     *             @OA\Property(property="clinic_id", type="integer", example=4),
      *             @OA\Property(property="doctor_id", type="integer", example=1),
      *             @OA\Property(property="terms_accepted", type="boolean", example=true),
      *             @OA\Property(property="data_sharing_consent", type="boolean", example=true),
@@ -129,7 +129,7 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"mobile_phone","pin"},
      *             @OA\Property(property="mobile_phone", type="string", example="03172650575"),
-     *             @OA\Property(property="pin", type="string", example="1234")
+     *             @OA\Property(property="pin", type="string", example="1111")
      *         )
      *     ),
      *     @OA\Response(

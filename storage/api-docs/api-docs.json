@@ -251,20 +251,20 @@
                                 "properties": {
                                     "first_name": {
                                         "type": "string",
-                                        "example": "John"
+                                        "example": "Raheel"
                                     },
                                     "surname": {
                                         "type": "string",
-                                        "example": "Smith"
+                                        "example": "Saleem"
                                     },
                                     "date_of_birth": {
                                         "type": "string",
                                         "format": "date",
-                                        "example": "1980-03-15"
+                                        "example": "1997-08-26"
                                     },
                                     "address": {
                                         "type": "string",
-                                        "example": "123 Main Street, London"
+                                        "example": "74 Woodford Avenue, E17 6LH"
                                     },
                                     "mobile_phone": {
                                         "type": "string",
@@ -272,20 +272,20 @@
                                     },
                                     "home_phone": {
                                         "type": "string",
-                                        "example": "02012345678"
+                                        "example": "03363860313"
                                     },
                                     "email": {
                                         "type": "string",
                                         "format": "email",
-                                        "example": "john.smith@example.com"
+                                        "example": "raheelsaleem.se@gmail.com"
                                     },
                                     "pin": {
                                         "type": "string",
-                                        "example": "1234"
+                                        "example": "1111"
                                     },
                                     "clinic_id": {
                                         "type": "integer",
-                                        "example": 1
+                                        "example": 4
                                     },
                                     "doctor_id": {
                                         "type": "integer",
@@ -387,7 +387,7 @@
                                     },
                                     "pin": {
                                         "type": "string",
-                                        "example": "1234"
+                                        "example": "1111"
                                     }
                                 },
                                 "type": "object"
