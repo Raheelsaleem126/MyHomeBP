@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             DoctorSeeder::class,
             EthnicityMainCategorySeeder::class,
             EthnicitySubcategorySeeder::class,
+            ComorbiditySeeder::class,
             MedicationSeeder::class,
             PatientSeeder::class,
             BloodPressureReadingSeeder::class,

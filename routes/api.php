@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\DoctorController;
 use App\Http\Controllers\Api\SpecialityController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\EthnicityController;
+use App\Http\Controllers\Api\ComorbidityController;
 use App\Http\Controllers\Api\MedicationController;
 
 /*
@@ -67,6 +68,12 @@ Route::prefix('ethnicity')->group(function () {
     Route::get('subcategories/{id}', [EthnicityController::class, 'showSubcategory']);
     Route::get('categories/{categoryId}/subcategories', [EthnicityController::class, 'categorySubcategories']);
     Route::get('hierarchy', [EthnicityController::class, 'hierarchy']);
+});
+
+// Comorbidities (public)
+Route::prefix('comorbidities')->group(function () {
+    Route::get('/', [ComorbidityController::class, 'index']);
+    Route::get('{id}', [ComorbidityController::class, 'show']);
 });
 
 // Medications (public)

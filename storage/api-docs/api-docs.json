@@ -1359,6 +1359,111 @@
                 }
             }
         },
+        "/comorbidities": {
+            "get": {
+                "tags": [
+                    "Comorbidities"
+                ],
+                "summary": "Get all comorbidities",
+                "operationId": "a67f2a28c2da8cc8d439fe65eeb0f1ec",
+                "responses": {
+                    "200": {
+                        "description": "Comorbidities retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "comorbidities": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comorbidities/{id}": {
+            "get": {
+                "tags": [
+                    "Comorbidities"
+                ],
+                "summary": "Get comorbidity by ID",
+                "operationId": "59b000b3a27fd8d24d6b92593dd29986",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Comorbidity ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": "1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Comorbidity retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "success"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "comorbidity": {
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Comorbidity not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "error"
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Comorbidity not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/doctors": {
             "get": {
                 "tags": [
@@ -2662,11 +2767,6 @@
                                                                 "diabetes_type_2"
                                                             ]
                                                         },
-                                                        "others_comorbidities": {
-                                                            "description": "Other comorbidities if 'others' is selected",
-                                                            "type": "string",
-                                                            "example": "Heart condition, Asthma"
-                                                        },
                                                         "hypertension_diagnosis": {
                                                             "description": "Hypertension diagnosis: yes, no, dont_know",
                                                             "type": "string",
@@ -2807,11 +2907,6 @@
                                             "diabetes_type_2"
                                         ]
                                     },
-                                    "others_comorbidities": {
-                                        "description": "Other comorbidities if 'others' is selected in comorbidities array",
-                                        "type": "string",
-                                        "example": "Heart condition, Asthma"
-                                    },
                                     "hypertension_diagnosis": {
                                         "description": "Hypertension Diagnosis Options: yes, no, dont_know",
                                         "type": "string",
@@ -2940,11 +3035,6 @@
                                                             "example": [
                                                                 "diabetes_type_2"
                                                             ]
-                                                        },
-                                                        "others_comorbidities": {
-                                                            "description": "Other comorbidities if 'others' is selected",
-                                                            "type": "string",
-                                                            "example": "Heart condition, Asthma"
                                                         },
                                                         "hypertension_diagnosis": {
                                                             "description": "Hypertension diagnosis: yes, no, dont_know",
@@ -3977,6 +4067,10 @@
         {
             "name": "Clinic",
             "description": "Clinic search and management"
+        },
+        {
+            "name": "Comorbidities",
+            "description": "Medical comorbidities for patient clinical data"
         },
         {
             "name": "Ethnicity",
