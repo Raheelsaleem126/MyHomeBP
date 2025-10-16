@@ -57,8 +57,7 @@ php artisan l5-swagger:generate
 # Fix final permissions
 echo "🔐 Finalizing permissions..."
 sudo chown -R ubuntu:www-data /var/www/myhomebp
-sudo chmod -R 775 storage bootstrap/cache public/vendor
-sudo chmod -R 775 /var/www/myhomebp/.git 2>/dev/null || true
+sudo chmod -R 775 /var/www/myhomebp/storage /var/www/myhomebp/bootstrap/cache /var/www/myhomebp/public/vendor
 
 echo "✅ Deployment completed successfully!"
 echo "🌐 Your API is ready!"
