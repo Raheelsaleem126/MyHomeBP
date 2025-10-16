@@ -3,13 +3,30 @@
 # MyHomeBP API Deployment Script
 echo "🚀 Deploying MyHomeBP API..."
 
+cd /var/www/myhomebp || { echo "❌ Project directory not found!"; exit 1; }
+
+echo "🔐 Fixing permissions..."
+sudo chown -R ubuntu:www-data /var/www/myhomebp || true
+sudo chmod -R 775 /var/www/myhomebp/storage /var/www/myhomebp/bootstrap/cache /var/www/myhomebp/public/vendor || true
+
+
+# Pull latest code (if applicable)
+if [ -d .git ]; then
+  echo "📥 Pulling latest code..."
+  git pull origin main || echo "⚠️ Git pull failed (check permissions or branch name)"
+fi
+
 # Install dependencies
 echo "📦 Installing dependencies..."
 composer install --no-dev --optimize-autoloader
 
-# Generate application key
-echo "🔑 Generating application key..."
-php artisan key:generate --no-interaction
+# Generate application key (only if not set)
+if ! grep -q "APP_KEY=" .env || [ -z "$(grep 'APP_KEY=' .env | cut -d '=' -f2)" ]; then
+  echo "🔑 Generating application key..."
+  php artisan key:generate --no-interaction
+else
+  echo "🔑 Application key already exists, skipping..."
+fi
 
 # Run migrations
 echo "🗄️ Running database migrations..."
@@ -34,10 +51,10 @@ php artisan vendor:publish --provider="L5Swagger\L5SwaggerServiceProvider" --tag
 echo "📚 Generating API documentation..."
 php artisan l5-swagger:generate
 
-# Set permissions
-echo "🔐 Setting permissions..."
-chmod -R 755 storage
-chmod -R 755 bootstrap/cache
+# Fix final permissions
+echo "🔐 Finalizing permissions..."
+sudo chown -R ubuntu:www-data /var/www/myhomebp
+sudo chmod -R 775 /var/www/myhomebp/storage /var/www/myhomebp/bootstrap/cache /var/www/myhomebp/public/vendor
 
 echo "✅ Deployment completed successfully!"
 echo "🌐 Your API is ready!"

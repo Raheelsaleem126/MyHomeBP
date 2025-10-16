@@ -34,7 +34,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07123456789',
                 'home_phone' => '02079460958',
                 'email' => 'john.smith@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => true,
                 'notifications_consent' => true,
@@ -48,7 +48,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07987654321',
                 'home_phone' => '01612761234',
                 'email' => 'sarah.johnson@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => true,
                 'notifications_consent' => false,
@@ -62,7 +62,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07456789123',
                 'home_phone' => '01212002000',
                 'email' => 'michael.brown@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => false,
                 'notifications_consent' => true,
@@ -76,7 +76,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07891234567',
                 'home_phone' => '01132432799',
                 'email' => 'emma.wilson@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => true,
                 'notifications_consent' => true,
@@ -90,7 +90,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07654321987',
                 'home_phone' => '01412114000',
                 'email' => 'david.taylor@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => true,
                 'notifications_consent' => true,
@@ -104,7 +104,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07345678901',
                 'home_phone' => '01517062000',
                 'email' => 'lisa.anderson@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => false,
                 'notifications_consent' => false,
@@ -118,7 +118,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07901234567',
                 'home_phone' => '02071887188',
                 'email' => 'robert.thomas@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => true,
                 'notifications_consent' => true,
@@ -132,7 +132,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07432109876',
                 'home_phone' => '01612761234',
                 'email' => 'jennifer.jackson@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => true,
                 'notifications_consent' => true,
@@ -146,7 +146,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07678901234',
                 'home_phone' => '01212002000',
                 'email' => 'christopher.white@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => false,
                 'notifications_consent' => true,
@@ -160,7 +160,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07234567890',
                 'home_phone' => '01132432799',
                 'email' => 'amanda.harris@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => true,
                 'notifications_consent' => true,
@@ -174,7 +174,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07567890123',
                 'home_phone' => '01412114000',
                 'email' => 'james.martin@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => true,
                 'notifications_consent' => false,
@@ -188,7 +188,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07890123456',
                 'home_phone' => '01517062000',
                 'email' => 'michelle.thompson@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => true,
                 'notifications_consent' => true,
@@ -202,7 +202,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07123456780',
                 'home_phone' => '02079460958',
                 'email' => 'daniel.garcia@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => false,
                 'notifications_consent' => false,
@@ -216,7 +216,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07987654320',
                 'home_phone' => '01612761234',
                 'email' => 'nicole.martinez@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => true,
                 'notifications_consent' => true,
@@ -230,7 +230,7 @@ class PatientSeeder extends Seeder
                 'mobile_phone' => '07456789120',
                 'home_phone' => '01212002000',
                 'email' => 'kevin.robinson@email.com',
-                'password' => 'password123',
+                'pin' => '1234',
                 'terms_accepted' => true,
                 'data_sharing_consent' => true,
                 'notifications_consent' => true,
@@ -245,8 +245,8 @@ class PatientSeeder extends Seeder
                 continue;
             }
             
-            // Hash the password
-            $patientData['password'] = Hash::make($patientData['password']);
+            // Hash the pin
+            $patientData['pin'] = Hash::make($patientData['pin']);
             
             // Assign a random clinic
             $patientData['clinic_id'] = $clinics->random()->id;
@@ -277,15 +277,16 @@ class PatientSeeder extends Seeder
         
         $clinicalData = [
             'patient_id' => $patient->id,
-            'height_cm' => $heightCm,
-            'weight_kg' => $weightKg,
+            'height' => $heightCm,
+            'weight' => $weightKg,
             'bmi' => $bmi,
-            'ethnicity' => $this->getRandomEthnicity(),
+            'ethnicity_code' => $this->getRandomEthnicityCode(),
+            'ethnicity_description' => $this->getRandomEthnicityDescription(),
             'smoking_status' => $this->getRandomSmokingStatus(),
-            'hypertension_diagnosis' => rand(1, 100) <= 25, // 25% chance of hypertension
+            'hypertension_diagnosis' => rand(1, 100) <= 25 ? 'yes' : 'no', // 25% chance of hypertension
             'medications' => $this->getRandomMedications(),
             'comorbidities' => $this->getRandomComorbidities(),
-            'last_blood_test' => Carbon::now()->subMonths(rand(1, 12)),
+            'last_blood_test_date' => Carbon::now()->subMonths(rand(1, 12)),
             'urine_protein_creatinine_ratio' => rand(1, 100) <= 10 ? rand(1, 300) / 10 : null, // 10% chance of elevated
         ];
 
@@ -308,25 +309,66 @@ class PatientSeeder extends Seeder
     }
 
     /**
-     * Get random ethnicity
+     * Get random ethnicity code
      */
-    private function getRandomEthnicity(): string
+    private function getRandomEthnicityCode(): string
     {
-        $ethnicities = [
-            'White British',
-            'White Irish',
-            'White Other',
-            'Mixed/Multiple ethnic groups',
-            'Asian/Asian British - Indian',
-            'Asian/Asian British - Pakistani',
-            'Asian/Asian British - Bangladeshi',
-            'Asian/Asian British - Chinese',
-            'Asian/Asian British - Other',
-            'Black/African/Caribbean/Black British',
-            'Other ethnic group',
+        $ethnicityCodes = [
+            'A' => 'English, Welsh, Scottish, Northern Irish or British',
+            'B' => 'Irish',
+            'C' => 'Gypsy or Irish Traveller',
+            'D' => 'Roma',
+            'E' => 'Any other White background',
+            'F' => 'White and Black Caribbean',
+            'G' => 'White and Black African',
+            'H' => 'White and Asian',
+            'I' => 'Any other Mixed or Multiple ethnic background',
+            'J' => 'Indian',
+            'K' => 'Pakistani',
+            'L' => 'Bangladeshi',
+            'M' => 'Chinese',
+            'N' => 'Any other Asian background',
+            'O' => 'African',
+            'P' => 'Caribbean',
+            'R' => 'Any other Black, Black British, or Caribbean background',
+            'S' => 'Arab',
+            'Z' => 'Any other ethnic group',
         ];
         
-        return $ethnicities[array_rand($ethnicities)];
+        $codes = array_keys($ethnicityCodes);
+        return $codes[array_rand($codes)];
+    }
+
+    /**
+     * Get random ethnicity description
+     */
+    private function getRandomEthnicityDescription(): string
+    {
+        $ethnicityCodes = [
+            'A' => 'English, Welsh, Scottish, Northern Irish or British',
+            'B' => 'Irish',
+            'C' => 'Gypsy or Irish Traveller',
+            'D' => 'Roma',
+            'E' => 'Any other White background',
+            'F' => 'White and Black Caribbean',
+            'G' => 'White and Black African',
+            'H' => 'White and Asian',
+            'I' => 'Any other Mixed or Multiple ethnic background',
+            'J' => 'Indian',
+            'K' => 'Pakistani',
+            'L' => 'Bangladeshi',
+            'M' => 'Chinese',
+            'N' => 'Any other Asian background',
+            'O' => 'African',
+            'P' => 'Caribbean',
+            'R' => 'Any other Black, Black British, or Caribbean background',
+            'S' => 'Arab',
+            'Z' => 'Any other ethnic group',
+        ];
+        
+        $codes = array_keys($ethnicityCodes);
+        $selectedCode = $codes[array_rand($codes)];
+        return $ethnicityCodes[$selectedCode];
     }
 
     /**
@@ -361,14 +403,31 @@ class PatientSeeder extends Seeder
     private function getRandomMedications(): ?array
     {
         $medications = [
-            'Amlodipine 5mg daily',
-            'Lisinopril 10mg daily',
-            'Metformin 500mg twice daily',
-            'Simvastatin 20mg daily',
-            'Aspirin 75mg daily',
-            'Bendroflumethiazide 2.5mg daily',
-            'Ramipril 5mg daily',
-            'Atenolol 50mg daily',
+            [
+                'bnf_code' => '0205050A0AA',
+                'dose' => '5mg',
+                'frequency' => 'once_daily'
+            ],
+            [
+                'bnf_code' => '0205050A0AB',
+                'dose' => '10mg',
+                'frequency' => 'once_daily'
+            ],
+            [
+                'bnf_code' => '0601010A0AA',
+                'dose' => '500mg',
+                'frequency' => 'twice_daily'
+            ],
+            [
+                'bnf_code' => '0212000A0AA',
+                'dose' => '20mg',
+                'frequency' => 'once_daily'
+            ],
+            [
+                'bnf_code' => '0209000A0AA',
+                'dose' => '75mg',
+                'frequency' => 'once_daily'
+            ],
         ];
         
         // 30% chance of having medications
@@ -390,14 +449,13 @@ class PatientSeeder extends Seeder
     private function getRandomComorbidities(): ?array
     {
         $comorbidities = [
-            'Type 2 Diabetes',
-            'High Cholesterol',
-            'Obesity',
-            'Heart Disease',
-            'Kidney Disease',
-            'Sleep Apnea',
-            'Anxiety',
-            'Depression',
+            'stroke',
+            'diabetes_type_1',
+            'diabetes_type_2',
+            'atrial_fibrillation',
+            'transient_ischaemic_attack',
+            'chronic_kidney_disease',
+            'others',
         ];
         
         // 40% chance of having comorbidities
