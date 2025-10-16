@@ -26,7 +26,6 @@ class ClinicalData extends Model
         'last_blood_test_date',
         'urine_protein_creatinine_ratio',
         'comorbidities',
-        'others_comorbidities',
         'hypertension_diagnosis',
         'medications',
     ];
@@ -191,19 +190,11 @@ class ClinicalData extends Model
         $options = self::getComorbidityOptions();
         
         foreach ($this->comorbidities as $comorbidity) {
-            if ($comorbidity === 'others') {
-                $formatted[] = [
-                    'code' => 'others',
-                    'name' => 'Others',
-                    'description' => $this->others_comorbidities
-                ];
-            } else {
-                $formatted[] = [
-                    'code' => $comorbidity,
-                    'name' => $options[$comorbidity] ?? $comorbidity,
-                    'description' => null
-                ];
-            }
+            $formatted[] = [
+                'code' => $comorbidity,
+                'name' => $options[$comorbidity] ?? $comorbidity,
+                'description' => null
+            ];
         }
 
         return $formatted;
