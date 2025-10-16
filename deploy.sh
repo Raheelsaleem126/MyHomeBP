@@ -5,13 +5,10 @@ echo "🚀 Deploying MyHomeBP API..."
 
 cd /var/www/myhomebp || { echo "❌ Project directory not found!"; exit 1; }
 
-# Ensure proper ownership before anything else
-echo "👤 Fixing ownership..."
-sudo chown -R ubuntu:www-data /var/www/myhomebp
+echo "🔐 Fixing permissions..."
+sudo chown -R ubuntu:www-data /var/www/myhomebp || true
+sudo chmod -R 775 /var/www/myhomebp/storage /var/www/myhomebp/bootstrap/cache /var/www/myhomebp/public/vendor || true
 
-# Set permissions for writable directories early
-echo "🔐 Setting initial permissions..."
-sudo chmod -R 775 storage bootstrap/cache public/vendor
 
 # Pull latest code (if applicable)
 if [ -d .git ]; then
