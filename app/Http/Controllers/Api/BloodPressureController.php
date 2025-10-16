@@ -81,9 +81,26 @@ class BloodPressureController extends Controller
             ], 422);
         }
 
-        // Calculate averages for first two readings
-        $avgSystolic = round(($request->reading_1_systolic + $request->reading_2_systolic) / 2);
-        $avgDiastolic = round(($request->reading_1_diastolic + $request->reading_2_diastolic) / 2);
+        // Calculate averages for all readings (including third if provided)
+        $systolicReadings = array_filter([
+            $request->reading_1_systolic,
+            $request->reading_2_systolic,
+            $request->reading_3_systolic
+        ]);
+        $diastolicReadings = array_filter([
+            $request->reading_1_diastolic,
+            $request->reading_2_diastolic,
+            $request->reading_3_diastolic
+        ]);
+        $pulseReadings = array_filter([
+            $request->reading_1_pulse,
+            $request->reading_2_pulse,
+            $request->reading_3_pulse
+        ]);
+
+        $avgSystolic = round(array_sum($systolicReadings) / count($systolicReadings));
+        $avgDiastolic = round(array_sum($diastolicReadings) / count($diastolicReadings));
+        $avgPulse = round(array_sum($pulseReadings) / count($pulseReadings));
 
         // Check if high reading (≥180/≥110)
         $isHighReading = $avgSystolic >= 180 || $avgDiastolic >= 110;
@@ -92,6 +109,9 @@ class BloodPressureController extends Controller
         // Determine system response
         $systemResponse = $this->getSystemResponse($avgSystolic, $avgDiastolic, $request->reading_3_systolic, $request->reading_3_diastolic);
         $requiresThirdReading = $isHighReading && !$request->reading_3_systolic;
+
+        // Determine reading category
+        $readingCategory = $this->getReadingCategory($avgSystolic, $avgDiastolic);
 
         // If high reading and no third reading provided, return error
         if ($requiresThirdReading) {
@@ -121,6 +141,10 @@ class BloodPressureController extends Controller
             'reading_3_systolic' => $request->reading_3_systolic,
             'reading_3_diastolic' => $request->reading_3_diastolic,
             'reading_3_pulse' => $request->reading_3_pulse,
+            'average_systolic' => $avgSystolic,
+            'average_diastolic' => $avgDiastolic,
+            'average_pulse' => $avgPulse,
+            'reading_category' => $readingCategory,
             'is_high_reading' => $isHighReading,
             'requires_urgent_advice' => $requiresUrgentAdvice,
             'system_response' => $systemResponse,
@@ -254,6 +278,26 @@ class BloodPressureController extends Controller
                 'period_days' => $period
             ]
         ]);
+    }
+
+    /**
+     * Get reading category based on NICE guidelines
+     */
+    private function getReadingCategory(int $systolic, int $diastolic): string
+    {
+        if ($systolic >= 180 || $diastolic >= 110) {
+            return 'Hypertensive Crisis';
+        } elseif ($systolic >= 160 || $diastolic >= 100) {
+            return 'Stage 2 Hypertension';
+        } elseif ($systolic >= 140 || $diastolic >= 90) {
+            return 'Stage 1 Hypertension';
+        } elseif ($systolic >= 135 || $diastolic >= 85) {
+            return 'High Normal';
+        } elseif ($systolic >= 120 || $diastolic >= 80) {
+            return 'Normal';
+        } else {
+            return 'Optimal';
+        }
     }
 
     /**
