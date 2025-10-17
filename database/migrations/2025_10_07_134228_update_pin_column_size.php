@@ -22,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Clear PIN data before reverting column size to avoid truncation errors
+        DB::table('patients')->update(['pin' => null]);
+        
         Schema::table('patients', function (Blueprint $table) {
             // Revert PIN column back to 4 characters
             $table->string('pin', 4)->change();
