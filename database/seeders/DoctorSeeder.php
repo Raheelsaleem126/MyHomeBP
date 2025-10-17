@@ -139,6 +139,7 @@ class DoctorSeeder extends Seeder
             }
 
             // Assign doctor to random clinics (1-3 clinics per doctor)
+            // Note: Only 5 clinics are available, so max assignment is limited to available clinics
             $clinicCount = rand(1, min(3, $clinics->count()));
             $selectedClinics = $clinics->random($clinicCount);
             
