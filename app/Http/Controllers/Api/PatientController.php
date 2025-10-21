@@ -219,6 +219,11 @@ class PatientController extends Controller
             'medications'
         ]);
 
+        // If hypertension_diagnosis is "no", set medications to null
+        if ($request->input('hypertension_diagnosis') === 'no') {
+            $clinicalDataInput['medications'] = null;
+        }
+
         $clinicalData = $patient->clinicalData()->updateOrCreate(
             ['patient_id' => $patient->id],
             $clinicalDataInput
