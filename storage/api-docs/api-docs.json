@@ -2731,14 +2731,14 @@
                                                             "example": 22.9
                                                         },
                                                         "ethnicity_code": {
-                                                            "description": "UK ONS ethnicity code",
+                                                            "description": "UK ONS ethnicity code - Get available codes from /api/ethnicity/categories",
                                                             "type": "string",
-                                                            "example": "A"
+                                                            "example": "C"
                                                         },
                                                         "ethnicity_description": {
-                                                            "description": "Ethnicity description",
+                                                            "description": "Ethnicity description - Get from /api/ethnicity/categories",
                                                             "type": "string",
-                                                            "example": "English, Welsh, Scottish, Northern Irish or British"
+                                                            "example": "Pakistani"
                                                         },
                                                         "smoking_status": {
                                                             "description": "Smoking Status: never_smoked, current_smoker, ex_smoker, vaping, occasional_smoker",
@@ -2855,17 +2855,17 @@
                                         "example": 70
                                     },
                                     "ethnicity_code": {
-                                        "description": "UK ONS ethnicity code - Get available codes from /api/ethnicity-codes",
+                                        "description": "UK ONS ethnicity code - Get available codes from /api/ethnicity/categories",
                                         "type": "string",
-                                        "example": "A"
+                                        "example": "C"
                                     },
                                     "ethnicity_description": {
-                                        "description": "Ethnicity description - Get from /api/ethnicity-codes",
+                                        "description": "Ethnicity description - Get from /api/ethnicity/categories",
                                         "type": "string",
-                                        "example": "English, Welsh, Scottish, Northern Irish or British"
+                                        "example": "Pakistani"
                                     },
                                     "smoking_status": {
-                                        "description": "Smoking Status Options: never_smoked, current_smoker, ex_smoker, vaping, occasional_smoker",
+                                        "description": "Smoking Status Options: never_smoked, current_smoker, ex_smoker, vaping, occasional_smoker - Get options from /api/smoking-status/options",
                                         "type": "string",
                                         "enum": [
                                             "never_smoked",
@@ -3002,12 +3002,12 @@
                                                         "ethnicity_code": {
                                                             "description": "UK ONS ethnicity code",
                                                             "type": "string",
-                                                            "example": "A"
+                                                            "example": "C"
                                                         },
                                                         "ethnicity_description": {
                                                             "description": "Ethnicity description",
                                                             "type": "string",
-                                                            "example": "English, Welsh, Scottish, Northern Irish or British"
+                                                            "example": "Pakistani"
                                                         },
                                                         "smoking_status": {
                                                             "description": "Smoking Status: never_smoked, current_smoker, ex_smoker, vaping, occasional_smoker",
