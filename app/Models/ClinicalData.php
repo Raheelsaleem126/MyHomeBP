@@ -122,15 +122,12 @@ class ClinicalData extends Model
      */
     public static function getComorbidityOptions(): array
     {
-        return [
-            'stroke' => 'Stroke',
-            'diabetes_type_1' => 'Diabetes Mellitus (Type 1)',
-            'diabetes_type_2' => 'Diabetes Mellitus (Type 2)',
-            'atrial_fibrillation' => 'Atrial Fibrillation',
-            'transient_ischaemic_attack' => 'Transient Ischaemic Attack',
-            'chronic_kidney_disease' => 'Chronic Kidney Disease',
-            'others' => 'Others',
-        ];
+        $options = [];
+        $comorbidities = Comorbidity::query()->active()->ordered()->get(['code', 'name']);
+        foreach ($comorbidities as $comorbidity) {
+            $options[$comorbidity->code] = $comorbidity->name;
+        }
+        return $options;
     }
 
     /**

@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Patient;
 use App\Models\ClinicalData;
+use App\Models\Comorbidity;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 /**
  * @OA\Tag(
@@ -180,16 +182,22 @@ class PatientController extends Controller
     {
         $patient = $request->user();
 
+        // Load allowed comorbidity codes dynamically from DB
+        $allowedComorbidityCodes = Comorbidity::query()
+            ->active()
+            ->pluck('code')
+            ->toArray();
+
         $validator = Validator::make($request->all(), [
             'height' => 'nullable|numeric|min:50|max:300',
             'weight' => 'nullable|numeric|min:10|max:500',
-            'ethnicity_code' => 'nullable|string|max:10|exists:ethnicity_main_categories,code',
+            'ethnicity_code' => 'nullable|string|max:10|exists:ethnicity_subcategories,code',
             'ethnicity_description' => 'nullable|string|max:255',
             'smoking_status' => 'nullable|in:never_smoked,current_smoker,ex_smoker,vaping,occasional_smoker',
             'last_blood_test_date' => 'nullable|date|before:today',
             'urine_protein_creatinine_ratio' => 'nullable|numeric|min:0|max:1000',
             'comorbidities' => 'nullable|array',
-            'comorbidities.*' => 'in:stroke,diabetes_type_1,diabetes_type_2,atrial_fibrillation,transient_ischaemic_attack,chronic_kidney_disease,others',
+            'comorbidities.*' => [Rule::in($allowedComorbidityCodes)],
             'hypertension_diagnosis' => 'nullable|in:yes,no,dont_know',
             'medications' => 'required_if:hypertension_diagnosis,yes|array|min:1',
             'medications.*.bnf_code' => 'required_if:hypertension_diagnosis,yes|string|exists:medications,bnf_code',
